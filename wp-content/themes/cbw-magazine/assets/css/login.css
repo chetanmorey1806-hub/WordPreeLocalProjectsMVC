@@ -1,0 +1,246 @@
+/* ------------------------------------------------------------------
+   GMS Magazine — the sign-in page.
+
+   The first screen anyone sees, and by default it is a grey box on a
+   grey field. This makes it the magazine's own: midnight navy, a slow
+   gold drift behind the card, and the masthead above the form.
+
+   Like the admin sheet, it only restyles what wp-login.php already
+   prints. No markup is moved, nothing is hidden, and every field keeps
+   the label and the focus ring a password manager and a screen reader
+   both rely on.
+   ------------------------------------------------------------------ */
+
+:root {
+  --gms-navy-950: #050b1c;
+  --gms-navy-900: #0a1330;
+  --gms-navy-800: #101c42;
+  --gms-gold-500: #c0a265;
+  --gms-gold-400: #d8be8b;
+  --gms-ease: cubic-bezier(.22, .61, .36, 1);
+}
+
+/* ── the field ────────────────────────────────────────────────── */
+body.login {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--gms-navy-950);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/*
+ * Two soft gold lights drifting behind everything. They are on a
+ * pseudo-element of the body so they cost nothing to the form itself,
+ * and they move slowly enough to read as depth rather than motion.
+ */
+body.login::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: 0;
+  background:
+    radial-gradient(38% 38% at 22% 28%, rgba(192, 162, 101, .20), transparent 62%),
+    radial-gradient(34% 34% at 78% 72%, rgba(43, 64, 121, .34), transparent 60%);
+  animation: gms-drift 22s ease-in-out infinite alternate;
+}
+@keyframes gms-drift {
+  from { transform: translate3d(-2%, -1%, 0) scale(1) }
+  to   { transform: translate3d(2%, 2%, 0) scale(1.06) }
+}
+body.login > * { position: relative; z-index: 1; }
+
+/* ── the masthead ─────────────────────────────────────────────── */
+.login .wp-login-logo { margin-bottom: 6px; }
+.login .wp-login-logo a {
+  width: auto;
+  height: auto;
+  margin: 0 auto 4px;
+  padding: 0;
+  background: none;
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  line-height: 1.2;
+  color: #f3efe4;
+  text-indent: 0;
+  text-decoration: none;
+  animation: gms-in .5s var(--gms-ease) both;
+}
+.login .wp-login-logo a:hover { color: var(--gms-gold-400); }
+/* The rule under the masthead, drawn on arrival. */
+.login .wp-login-logo::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 3px;
+  margin: 10px auto 0;
+  border-radius: 3px;
+  background: linear-gradient(90deg, transparent, var(--gms-gold-500), transparent);
+  animation: gms-rule .7s var(--gms-ease) .18s both;
+}
+@keyframes gms-rule { from { width: 0; opacity: 0 } to { width: 64px; opacity: 1 } }
+
+/* ── the card ─────────────────────────────────────────────────── */
+.login form {
+  margin-top: 18px;
+  padding: 26px 24px 22px;
+  border: 1px solid rgba(216, 190, 139, .22);
+  border-radius: 14px;
+  background: rgba(16, 28, 66, .72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
+  animation: gms-in .5s var(--gms-ease) .08s both;
+}
+@keyframes gms-in {
+  from { opacity: 0; transform: translateY(14px) }
+  to   { opacity: 1; transform: none }
+}
+
+.login form label,
+.login .forgetmenot label { color: #c8cede; font-size: 13.5px; }
+
+.login form .input,
+.login input[type=text],
+.login input[type=password],
+.login input[type=email] {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid rgba(216, 190, 139, .28);
+  border-radius: 9px;
+  background: rgba(5, 11, 28, .55);
+  color: #f3efe4;
+  font-size: 15px;
+  box-shadow: none;
+  transition: border-color .18s var(--gms-ease), box-shadow .18s var(--gms-ease), background .18s var(--gms-ease);
+}
+.login form .input:focus,
+.login input[type=text]:focus,
+.login input[type=password]:focus,
+.login input[type=email]:focus {
+  border-color: var(--gms-gold-500);
+  background: rgba(5, 11, 28, .78);
+  box-shadow: 0 0 0 3px rgba(192, 162, 101, .25);
+  outline: none;
+}
+.login input::placeholder { color: #6d7690; }
+
+/* The eye button sits inside the password field; it has to keep its
+   contrast against the dark ground. */
+.login .wp-hide-pw .dashicons { color: #98a1b6; }
+.login .wp-hide-pw:hover .dashicons { color: var(--gms-gold-400); }
+.login .wp-hide-pw:focus { box-shadow: 0 0 0 2px var(--gms-gold-500); border-radius: 6px; }
+
+/* ── the button ───────────────────────────────────────────────── */
+.login .button-primary {
+  float: none;
+  width: 100%;
+  height: auto;
+  margin-top: 4px;
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--gms-gold-500), #a8874c);
+  color: var(--gms-navy-950);
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-shadow: none;
+  box-shadow: 0 8px 22px rgba(192, 162, 101, .28);
+  transition: transform .16s var(--gms-ease), box-shadow .2s var(--gms-ease), filter .2s var(--gms-ease);
+}
+.login .button-primary:hover,
+.login .button-primary:focus {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 12px 30px rgba(192, 162, 101, .38);
+}
+.login .button-primary:active { transform: translateY(0); }
+.login .button-primary:focus-visible { outline: 2px solid #f3efe4; outline-offset: 2px; }
+.login .submit { margin-top: 14px; }
+
+/* ── the links under the card ─────────────────────────────────── */
+.login #nav,
+.login #backtoblog {
+  padding: 10px 0 0;
+  text-align: center;
+  animation: gms-in .5s var(--gms-ease) .16s both;
+}
+.login #nav a,
+.login #backtoblog a {
+  color: #98a1b6;
+  font-size: 13px;
+  transition: color .18s var(--gms-ease);
+}
+.login #nav a:hover,
+.login #backtoblog a:hover { color: var(--gms-gold-400); }
+
+/* ── messages ─────────────────────────────────────────────────── */
+.login .message,
+.login .notice,
+.login #login_error {
+  border-radius: 10px;
+  border-left-width: 4px;
+  background: rgba(16, 28, 66, .86);
+  color: #f3efe4;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .35);
+  animation: gms-shake .38s var(--gms-ease) both;
+}
+.login #login_error { border-left-color: #e59aa3; }
+.login .message { border-left-color: var(--gms-gold-500); }
+@keyframes gms-shake {
+  0%   { opacity: 0; transform: translateX(-9px) }
+  60%  { transform: translateX(4px) }
+  100% { opacity: 1; transform: none }
+}
+
+/* ------------------------------------------------------------------
+   Small screens. The card takes the width it is given and the gutters
+   shrink; nothing is dropped, because there is nothing here to drop.
+   ------------------------------------------------------------------ */
+@media (max-width: 480px) {
+  /* wp-login.php leaves #login as content-box, so width:100% plus the side
+     padding pushed the card 36px past every phone viewport. */
+  .login #login,
+  .login #login * { box-sizing: border-box; }
+  .login #login { width: 100%; max-width: 400px; padding: 6% 18px 18px; }
+  .login form { padding: 20px 16px 18px; border-radius: 12px; }
+  .login .wp-login-logo a { font-size: 22px; }
+  .login form .input,
+  .login input[type=text],
+  .login input[type=password] { font-size: 16px; }  /* 16px stops iOS zooming on focus */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.login::before { animation: none; }
+  .login *,
+  .login *::before,
+  .login *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   The "?" beside Remember Me keeps core's dark grey, which lands at
+   1.75:1 on the navy card. Give it the card's own muted tone.
+   ------------------------------------------------------------------ */
+.login .wp-tooltip,
+.login .wp-tooltip .dashicons,
+.login .wp-tooltip::before{
+  color: rgba(240, 236, 226, .72);
+}
+.login .wp-tooltip:hover,
+.login .wp-tooltip:focus{
+  color: var(--gms-gold-400, #d8be8b);
+}
+.login .wp-tooltip:focus-visible{
+  outline: 2px solid var(--gms-gold-500, #c0a265);
+  outline-offset: 2px;
+  border-radius: 50%;
+}

@@ -1,0 +1,803 @@
+/* ------------------------------------------------------------------
+   GMS Magazine — the admin, in the magazine's own colours.
+
+   WordPress ships a grey admin that looks like nobody's site. This puts
+   the navy-and-gold of the front end behind the desk as well, so the
+   person editing the magazine is plainly inside the magazine.
+
+   It restyles; it never rebuilds. Every rule dresses markup WordPress
+   already prints, so a core update changes the furniture and this only
+   changes the paint. Nothing here moves a control or hides one.
+   ------------------------------------------------------------------ */
+
+:root {
+  --gms-navy-950: #050b1c;
+  --gms-navy-900: #0a1330;
+  --gms-navy-800: #101c42;
+  --gms-navy-700: #16224a;
+  --gms-gold-500: #c0a265;
+  --gms-link: #2b4079;
+  --gms-gold-400: #d8be8b;
+
+  --gms-paper: #fbf8f2;
+  --gms-surface: #ffffff;
+  --gms-line: #e3daca;
+  --gms-ink: #141b2e;
+  --gms-body: #3b4358;
+  --gms-muted: #61687a;
+
+  --gms-shadow: 0 1px 2px rgba(5, 11, 28, .05), 0 2px 10px rgba(5, 11, 28, .06);
+  --gms-shadow-lift: 0 6px 18px rgba(5, 11, 28, .10), 0 16px 40px rgba(5, 11, 28, .08);
+  --gms-radius: 12px;
+  --gms-ease: cubic-bezier(.22, .61, .36, 1);
+}
+
+/* ── the page ─────────────────────────────────────────────────── */
+body.wp-admin {
+  background: var(--gms-paper);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.wp-admin #wpcontent { padding-left: 22px; }
+
+/* A heading with the magazine's rule under it, the way the front page
+   heads its sections. */
+.wp-heading-inline,
+#wpbody-content > .wrap > h1:first-child {
+  font-family: "Poppins", "Inter", sans-serif;
+  font-weight: 700;
+  color: var(--gms-ink);
+  letter-spacing: -.01em;
+}
+#wpbody-content > .wrap > h1:first-child::after {
+  content: "";
+  display: block;
+  width: 54px;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--gms-gold-500), var(--gms-navy-800));
+  animation: gms-rule .5s var(--gms-ease) both;
+}
+@keyframes gms-rule { from { width: 0; opacity: 0 } to { width: 54px; opacity: 1 } }
+
+/* ── the sidebar ──────────────────────────────────────────────── */
+#adminmenuback,
+#adminmenuwrap,
+#adminmenu {
+  background: linear-gradient(180deg, var(--gms-navy-900), var(--gms-navy-950));
+}
+#adminmenu a { color: #c8cede; }
+#adminmenu .wp-submenu { background: var(--gms-navy-950); }
+#adminmenu li.menu-top:hover > a,
+#adminmenu li.opensub > a.menu-top,
+#adminmenu a:focus-visible {
+  background: var(--gms-navy-700);
+  color: #fff;
+}
+/* The open section is marked in gold, and the marker slides in rather
+   than appearing — it is the one thing on the rail worth noticing. */
+#adminmenu li.current > a.menu-top,
+#adminmenu li.wp-has-current-submenu > a.menu-top {
+  position: relative;
+  background: var(--gms-navy-800);
+  color: #fff;
+}
+#adminmenu li.current > a.menu-top::before,
+#adminmenu li.wp-has-current-submenu > a.menu-top::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 3px;
+  background: var(--gms-gold-400);
+  animation: gms-mark .35s var(--gms-ease) both;
+}
+@keyframes gms-mark { from { transform: scaleY(0) } to { transform: scaleY(1) } }
+#adminmenu .wp-menu-image::before { transition: transform .2s var(--gms-ease); }
+#adminmenu li.menu-top:hover .wp-menu-image::before { transform: translateX(2px) scale(1.08); }
+#adminmenu div.wp-menu-image::before { color: var(--gms-gold-400); }
+
+/* ── the top bar ──────────────────────────────────────────────── */
+#wpadminbar {
+  background: var(--gms-navy-950);
+  box-shadow: 0 1px 0 rgba(216, 190, 139, .18);
+}
+#wpadminbar .ab-item { transition: color .18s var(--gms-ease); }
+#wpadminbar .ab-top-menu > li:hover > .ab-item { color: var(--gms-gold-400); }
+
+/* ── dashboard cards ──────────────────────────────────────────── */
+/*
+ * The boxes lift on hover and arrive one after another on load. The
+ * stagger is short and only runs once: it says "these are separate
+ * things" on the first read and then stays out of the way.
+ */
+#dashboard-widgets .postbox,
+#poststuff .postbox,
+.wrap .postbox {
+  background: var(--gms-surface);
+  border: 1px solid var(--gms-line);
+  border-radius: var(--gms-radius);
+  box-shadow: var(--gms-shadow);
+  overflow: hidden;
+  transition: transform .22s var(--gms-ease), box-shadow .22s var(--gms-ease);
+  animation: gms-rise .45s var(--gms-ease) both;
+}
+#dashboard-widgets .postbox:hover,
+.wrap .postbox:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--gms-shadow-lift);
+}
+@keyframes gms-rise {
+  from { opacity: 0; transform: translateY(14px) }
+  to   { opacity: 1; transform: none }
+}
+#dashboard-widgets .postbox:nth-child(1) { animation-delay: .02s }
+#dashboard-widgets .postbox:nth-child(2) { animation-delay: .08s }
+#dashboard-widgets .postbox:nth-child(3) { animation-delay: .14s }
+#dashboard-widgets .postbox:nth-child(4) { animation-delay: .20s }
+#dashboard-widgets .postbox:nth-child(5) { animation-delay: .26s }
+#dashboard-widgets .postbox:nth-child(6) { animation-delay: .32s }
+
+.postbox > .postbox-header {
+  background: linear-gradient(180deg, #fff, var(--gms-paper));
+  border-bottom: 1px solid var(--gms-line);
+}
+.postbox > .postbox-header h2,
+.postbox > .postbox-header h3 {
+  font-family: "Poppins", "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--gms-ink);
+  padding: 13px 16px;
+}
+.postbox .inside { padding: 4px 16px 16px; color: var(--gms-body); }
+
+/* "At a Glance" — the counts are the point, so they are given the size
+   of a figure rather than the size of a link. */
+#dashboard_right_now .main ul li a,
+#dashboard_right_now .main ul li span {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gms-ink);
+  transition: color .18s var(--gms-ease);
+}
+#dashboard_right_now .main ul li a:hover { color: var(--gms-gold-500); }
+#dashboard_right_now .main ul li::before { color: var(--gms-gold-500); }
+
+/* Activity — each row underlines from the left on hover, the way the
+   front end's headlines do. */
+#dashboard_activity .activity-block .subsubsub li a,
+#activity-widget h3 { color: var(--gms-ink); }
+#the-comment-list .comment-item,
+#activity-widget #future-posts li,
+#activity-widget #published-posts li {
+  border-radius: 8px;
+  padding: 8px 10px;
+  transition: background .18s var(--gms-ease);
+}
+#activity-widget #future-posts li:hover,
+#activity-widget #published-posts li:hover { background: var(--gms-paper); }
+
+/* ── buttons ──────────────────────────────────────────────────── */
+.wp-core-ui .button-primary {
+  background: var(--gms-navy-800);
+  border-color: var(--gms-navy-800);
+  /* Core sets this white; state it here because an <a class="button
+     button-primary"> also matches the secondary rule below, which comes
+     later in the file and would otherwise win the colour. */
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+  text-shadow: none;
+  box-shadow: none;
+  transition: transform .16s var(--gms-ease), background .18s var(--gms-ease), box-shadow .18s var(--gms-ease);
+}
+.wp-core-ui .button-primary:hover,
+.wp-core-ui .button-primary:focus {
+  background: var(--gms-navy-900);
+  color: #fff;
+  border-color: var(--gms-navy-900);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16, 28, 66, .28);
+}
+.wp-core-ui .button-primary:active { transform: translateY(0); }
+.wp-core-ui .button:not(.button-primary),
+.wp-core-ui .button-secondary {
+  border-radius: 8px;
+  border-color: var(--gms-line);
+  color: var(--gms-ink);
+  transition: border-color .18s var(--gms-ease), color .18s var(--gms-ease);
+}
+.wp-core-ui .button:not(.button-primary):hover { border-color: var(--gms-gold-500); color: var(--gms-navy-800); }
+.wp-core-ui .button:focus-visible,
+.wp-core-ui .button-primary:focus-visible {
+  outline: 2px solid var(--gms-gold-500);
+  outline-offset: 2px;
+}
+
+/* ── tables ───────────────────────────────────────────────────── */
+.wp-list-table {
+  border-radius: var(--gms-radius);
+  overflow: hidden;
+  border: 1px solid var(--gms-line);
+  box-shadow: var(--gms-shadow);
+}
+.wp-list-table thead th,
+.wp-list-table thead td {
+  background: var(--gms-paper);
+  color: var(--gms-muted);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.wp-list-table tbody tr { transition: background .16s var(--gms-ease); }
+.wp-list-table tbody tr:hover { background: var(--gms-paper); }
+.wp-list-table .row-title { color: var(--gms-ink); font-weight: 600; }
+
+/* ── fields ───────────────────────────────────────────────────── */
+input[type=text], input[type=search], input[type=email], input[type=url],
+input[type=password], input[type=number], select, textarea {
+  border-radius: 8px;
+  border-color: var(--gms-line);
+  transition: border-color .18s var(--gms-ease), box-shadow .18s var(--gms-ease);
+}
+input[type=text]:focus, input[type=search]:focus, input[type=email]:focus,
+input[type=url]:focus, input[type=password]:focus, input[type=number]:focus,
+select:focus, textarea:focus {
+  border-color: var(--gms-gold-500);
+  box-shadow: 0 0 0 3px rgba(192, 162, 101, .22);
+  outline: none;
+}
+
+/* ── notices ──────────────────────────────────────────────────── */
+.notice, div.updated, div.error {
+  border-radius: 10px;
+  border-left-width: 4px;
+  box-shadow: var(--gms-shadow);
+  animation: gms-slide .32s var(--gms-ease) both;
+}
+@keyframes gms-slide {
+  from { opacity: 0; transform: translateX(-8px) }
+  to   { opacity: 1; transform: none }
+}
+
+/* ------------------------------------------------------------------
+   Small screens.
+
+   WordPress already collapses its own admin below 782px. What it does
+   not do is give the dashboard columns room to breathe, so the boxes
+   are widened, the gutters cut, and the lift on hover dropped — there
+   is no hover on a touch screen to lift for.
+   ------------------------------------------------------------------ */
+@media (max-width: 782px) {
+  .wp-admin #wpcontent { padding-left: 10px; }
+  #wpbody-content { padding-bottom: 40px; }
+  #dashboard-widgets .postbox-container { width: 100% !important; }
+  #dashboard-widgets .meta-box-sortables { min-height: 0; }
+  .postbox > .postbox-header h2 { font-size: 13.5px; padding: 12px 14px; }
+  .postbox .inside { padding: 4px 14px 14px; }
+  #wpbody-content > .wrap > h1:first-child { font-size: 22px; }
+
+  /* A wide table scrolls inside its own card instead of pushing the
+     page sideways. */
+  .wrap { overflow-x: hidden; }
+  #wpbody-content .wp-list-table { display: block; overflow-x: auto; }
+}
+
+@media (hover: none) {
+  #dashboard-widgets .postbox:hover,
+  .wrap .postbox:hover { transform: none; box-shadow: var(--gms-shadow); }
+}
+
+/* Motion is decoration here. Anyone who has asked for less gets the
+   same admin, arrived at rather than animated into. */
+@media (prefers-reduced-motion: reduce) {
+  .wp-admin *,
+  .wp-admin *::before,
+  .wp-admin *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   The magazine panel on the dashboard.
+
+   Core counts posts and pages; this counts the things this site is
+   actually made of, and gives each one a way in.
+   ------------------------------------------------------------------ */
+#cbw_overview .inside{padding:0 0 4px}
+
+.cbw-dash__grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:1px;
+  background:var(--gms-line, #e3daca);
+  border-bottom:1px solid var(--gms-line, #e3daca);
+}
+.cbw-dash__tile{
+  display:flex;flex-direction:column;gap:2px;
+  padding:18px 16px 16px;
+  background:#fff;color:inherit;text-decoration:none;
+  position:relative;overflow:hidden;
+  transition:background .18s ease, transform .18s ease;
+  animation:cbw-dash-rise .5s cubic-bezier(.22,.61,.36,1) both;
+  animation-delay:calc(var(--i, 0) * 60ms);
+}
+.cbw-dash__tile::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
+  background:linear-gradient(90deg, var(--gms-gold-500, #c0a265), var(--gms-gold-400, #d8be8b));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .28s cubic-bezier(.22,.61,.36,1);
+}
+.cbw-dash__tile:hover,
+.cbw-dash__tile:focus{background:#fdfbf6;transform:translateY(-2px)}
+.cbw-dash__tile:hover::after,
+.cbw-dash__tile:focus::after{transform:scaleX(1)}
+.cbw-dash__tile:focus-visible{outline:2px solid var(--gms-gold-500, #c0a265);outline-offset:-2px}
+
+.cbw-dash__icon{
+  color:var(--gms-gold-500, #c0a265);
+  font-size:19px;width:19px;height:19px;margin-bottom:4px;
+}
+.cbw-dash__num{
+  font-family:"Poppins",system-ui,sans-serif;
+  font-size:1.85rem;font-weight:700;line-height:1.05;
+  color:var(--gms-navy-900, #0a1330);
+  font-variant-numeric:tabular-nums;
+}
+.cbw-dash__label{
+  font-size:.74rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:#61687a;
+}
+
+.cbw-dash__bars{padding:16px 16px 4px;display:grid;gap:14px}
+.cbw-dash__barhead{
+  display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+  font-size:.8rem;color:#61687a;margin-bottom:6px;
+}
+.cbw-dash__barhead strong{color:var(--gms-navy-900, #0a1330);font-variant-numeric:tabular-nums}
+.cbw-dash__track{
+  height:6px;border-radius:99px;background:#eae2d3;overflow:hidden;
+}
+.cbw-dash__track span{
+  display:block;height:100%;border-radius:99px;
+  background:linear-gradient(90deg, var(--gms-gold-500, #c0a265), var(--gms-gold-400, #d8be8b));
+  width:var(--pct, 0%);
+  transform-origin:left;
+  animation:cbw-dash-fill .9s cubic-bezier(.22,.61,.36,1) both .25s;
+}
+
+.cbw-dash__links{
+  display:flex;flex-wrap:wrap;gap:8px;
+  padding:12px 16px 16px;margin:0;
+  border-top:1px solid #efe8da;
+}
+
+@keyframes cbw-dash-rise{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
+}
+@keyframes cbw-dash-fill{
+  from{transform:scaleX(0)}
+  to{transform:scaleX(1)}
+}
+
+@media (max-width:782px){
+  .cbw-dash__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cbw-dash__num{font-size:1.6rem}
+  .cbw-dash__links .button{flex:1 1 auto;text-align:center}
+}
+@media (max-width:400px){
+  .cbw-dash__grid{grid-template-columns:minmax(0,1fr)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .cbw-dash__tile,
+  .cbw-dash__track span{animation:none}
+  .cbw-dash__tile:hover,
+  .cbw-dash__tile:focus{transform:none}
+}
+
+/* ------------------------------------------------------------------
+   Two core controls that fall below 4.5:1 once the greys behind them
+   become ivory. The disabled pagination arrows are left as they are —
+   WCAG 1.4.3 exempts disabled controls, and dimming is how they read
+   as unavailable.
+   ------------------------------------------------------------------ */
+
+/* The reorder arrows in a widget header: core's #a7aaad on ivory is 2.33:1.
+   Core's own rule has the same specificity and loads later, so these are
+   matched one level deeper rather than reached for with !important. */
+.postbox .postbox-header .handle-order-higher,
+.postbox .postbox-header .handle-order-lower,
+.postbox .postbox-header .handlediv{
+  color: var(--gms-muted, #61687a);
+}
+.postbox .postbox-header .handle-order-higher:hover,
+.postbox .postbox-header .handle-order-lower:hover,
+.postbox .postbox-header .handlediv:hover{
+  color: var(--gms-navy-800, #101c42);
+}
+
+/* Row actions use WordPress's link blue at 13px, which lands at 4.26:1.
+   The brand navy is the same role and clears it comfortably. */
+.row-actions a,
+.row-actions .button-link{
+  color: var(--gms-link, #2b4079);
+}
+.row-actions a:hover,
+.row-actions .button-link:hover{
+  color: var(--gms-navy-900, #0a1330);
+}
+
+/* ==================================================================
+   The dashboard hero
+   ================================================================== */
+#welcome-panel.welcome-panel{
+  border:0;background:transparent;box-shadow:none;padding:0;margin:0 0 22px;
+}
+#welcome-panel .welcome-panel-content{margin:0;max-width:none}
+/* Rendered by in_admin_header, so it sits above the page title. Below 782px
+   the admin bar switches to position:absolute and stops reserving space, so
+   the hero has to clear its height itself or the masthead is cut off. */
+.cbw-hero-slot{padding:16px 20px 4px}
+.cbw-hero{margin:0}
+@media (max-width:782px){
+  .cbw-hero-slot{
+    /* Below 782px the admin bar is position:absolute and reserves no space. */
+    padding:calc(var(--wp-admin--admin-bar--height, 46px) + 12px) 12px 4px;
+  }
+}
+/* The dismiss control sits over the hero but is not inside it, so it cannot
+   inherit a ground. Give it its own, and it stays legible whatever is behind. */
+#welcome-panel .welcome-panel-close{
+  top:12px;right:12px;z-index:3;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 11px;border-radius:99px;
+  background:rgba(5,11,28,.62);
+  border:1px solid rgba(216,190,139,.28);
+  color:#f0ece2;text-decoration:none;
+  transition:background .18s var(--gms-ease), border-color .18s var(--gms-ease), color .18s var(--gms-ease);
+}
+#welcome-panel .welcome-panel-close:hover,
+#welcome-panel .welcome-panel-close:focus{
+  background:rgba(5,11,28,.86);border-color:var(--gms-gold-400);color:#fff;
+}
+#welcome-panel .welcome-panel-close:focus-visible{
+  outline:2px solid var(--gms-gold-400);outline-offset:2px;
+}
+
+.cbw-hero{
+  position:relative;overflow:hidden;
+  display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:34px;
+  padding:30px 34px;border-radius:16px;
+  background:
+    radial-gradient(120% 160% at 88% -20%, rgba(192,162,101,.30), transparent 58%),
+    linear-gradient(135deg, var(--gms-navy-800) 0%, var(--gms-navy-900) 52%, var(--gms-navy-950) 100%);
+  box-shadow:0 18px 44px rgba(5,11,28,.30);
+  animation:gms-hero-in .62s var(--gms-ease) both;
+}
+/* A slow champagne drift, the same idea as the sign-in page. */
+.cbw-hero__glow{
+  position:absolute;inset:-40% -10% auto -30%;height:150%;
+  background:radial-gradient(46% 46% at 30% 40%, rgba(216,190,139,.20), transparent 70%);
+  animation:gms-drift 22s ease-in-out infinite alternate;
+  pointer-events:none;
+}
+.cbw-hero::after{
+  /* fine diagonal rule texture */
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(115deg, rgba(216,190,139,.055) 0 1px, transparent 1px 26px);
+}
+.cbw-hero__main,.cbw-hero__side{position:relative;z-index:2}
+
+.cbw-hero__logo{
+  height:52px;width:auto;display:block;margin:0 0 16px;
+  animation:gms-hero-item .55s var(--gms-ease) both .06s;
+}
+.cbw-hero__eyebrow{
+  margin:0 0 6px;font-size:.74rem;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gms-gold-400);
+  animation:gms-hero-item .55s var(--gms-ease) both .12s;
+}
+.cbw-hero__title{
+  margin:0 0 8px;font-family:"Poppins",system-ui,sans-serif;
+  font-size:clamp(1.5rem,2.4vw,2rem);font-weight:700;line-height:1.16;
+  letter-spacing:-.02em;color:#fff;
+  animation:gms-hero-item .55s var(--gms-ease) both .18s;
+}
+.cbw-hero__sub{
+  margin:0 0 20px;font-size:.95rem;color:#c8cede;
+  animation:gms-hero-item .55s var(--gms-ease) both .24s;
+}
+.cbw-hero__sub strong{color:var(--gms-gold-400)}
+
+.cbw-hero__actions{
+  display:flex;flex-wrap:wrap;gap:10px;margin:0;
+  animation:gms-hero-item .55s var(--gms-ease) both .3s;
+}
+.cbw-hero__btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 16px;border-radius:9px;text-decoration:none;
+  font-size:.85rem;font-weight:600;line-height:1.2;
+  color:#e9ecf4;border:1px solid rgba(216,190,139,.32);
+  background:rgba(255,255,255,.05);
+  transition:transform .18s var(--gms-ease), background .18s var(--gms-ease),
+             border-color .18s var(--gms-ease), box-shadow .18s var(--gms-ease);
+}
+.cbw-hero__btn .dashicons{font-size:16px;width:16px;height:16px}
+.cbw-hero__btn:hover,.cbw-hero__btn:focus{
+  color:#fff;background:rgba(255,255,255,.12);
+  border-color:var(--gms-gold-400);transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(5,11,28,.34);
+}
+.cbw-hero__btn--gold{
+  background:linear-gradient(135deg,var(--gms-gold-400),var(--gms-gold-500));
+  border-color:transparent;color:var(--gms-navy-900);
+}
+.cbw-hero__btn--gold:hover,.cbw-hero__btn--gold:focus{
+  background:linear-gradient(135deg,#e6cd9d,var(--gms-gold-400));
+  color:var(--gms-navy-900);border-color:transparent;
+}
+.cbw-hero__btn:focus-visible{outline:2px solid var(--gms-gold-400);outline-offset:2px}
+
+.cbw-hero__side{
+  display:flex;flex-direction:column;gap:16px;
+  animation:gms-hero-item .55s var(--gms-ease) both .34s;
+}
+.cbw-hero__meter,.cbw-hero__recent{
+  padding:16px 18px;border-radius:12px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(216,190,139,.18);
+  backdrop-filter:blur(2px);
+}
+.cbw-hero__meterhead{
+  display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  font-size:.8rem;color:#c8cede;margin-bottom:9px;
+}
+.cbw-hero__meterhead strong{
+  font-family:"Poppins",system-ui,sans-serif;font-size:1.15rem;
+  color:#e8d5ae;font-variant-numeric:tabular-nums;
+}
+.cbw-hero__track{height:7px;border-radius:99px;background:rgba(5,11,28,.5);overflow:hidden}
+.cbw-hero__track span{
+  display:block;height:100%;width:var(--pct,0%);border-radius:99px;
+  background:linear-gradient(90deg,var(--gms-gold-500),var(--gms-gold-400));
+  transform-origin:left;animation:gms-fill 1s var(--gms-ease) both .45s;
+  position:relative;overflow:hidden;
+}
+.cbw-hero__track span::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);
+  transform:translateX(-100%);
+  animation:gms-shimmer 2.6s ease-in-out 1.4s infinite;
+}
+.cbw-hero__meterfoot{margin:8px 0 0;font-size:.76rem;color:#c2cadb}
+
+.cbw-hero__recent h3{
+  margin:0 0 8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:#e8d5ae;
+}
+.cbw-hero__recent ul{margin:0;padding:0;list-style:none}
+.cbw-hero__recent li{
+  display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+  padding:6px 0;border-bottom:1px solid rgba(216,190,139,.12);
+}
+.cbw-hero__recent li:last-child{border-bottom:0}
+.cbw-hero__recent a{
+  color:#e9ecf4;text-decoration:none;font-size:.85rem;font-weight:500;
+  transition:color .16s var(--gms-ease);
+}
+.cbw-hero__recent a:hover{color:var(--gms-gold-400)}
+.cbw-hero__recent time{font-size:.72rem;color:#bcc4d8;white-space:nowrap}
+
+@keyframes gms-hero-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes gms-hero-item{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+@keyframes gms-drift{from{transform:translate3d(-4%,-3%,0) scale(1)}to{transform:translate3d(8%,5%,0) scale(1.12)}}
+@keyframes gms-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes gms-shimmer{0%{transform:translateX(-100%)}55%,100%{transform:translateX(220%)}}
+
+@media (max-width:1100px){
+  .cbw-hero{grid-template-columns:minmax(0,1fr);gap:22px;padding:24px 22px}
+}
+@media (max-width:600px){
+  .cbw-hero{padding:20px 16px;border-radius:12px}
+  .cbw-hero__btn{flex:1 1 calc(50% - 5px);justify-content:center}
+}
+
+/* ==================================================================
+   The rail, properly
+
+   Core paints a flat column. This gives it an edge, a champagne marker
+   that slides, icons that answer to the pointer, and submenus that come
+   in one after another instead of all at once.
+   ================================================================== */
+#adminmenuback,
+#adminmenuwrap,
+#adminmenu{
+  background:
+    radial-gradient(120% 40% at 0% 0%, rgba(192,162,101,.10), transparent 60%),
+    linear-gradient(180deg, var(--gms-navy-800) 0%, var(--gms-navy-900) 40%, var(--gms-navy-950) 100%);
+}
+/* A hairline of champagne down the edge, so the rail reads as a surface. */
+#adminmenuwrap{box-shadow:inset -1px 0 0 rgba(216,190,139,.16)}
+
+#adminmenu li.menu-top{position:relative}
+#adminmenu a.menu-top{
+  transition:color .18s var(--gms-ease), background .18s var(--gms-ease),
+             padding-left .18s var(--gms-ease);
+}
+/* Hover is a wash that grows from the left rather than a flat block. */
+#adminmenu li.menu-top > a.menu-top::after{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(90deg, rgba(216,190,139,.16), rgba(216,190,139,0) 78%);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .26s var(--gms-ease);
+}
+#adminmenu li.menu-top:hover > a.menu-top::after,
+#adminmenu li.opensub > a.menu-top::after{transform:scaleX(1)}
+#adminmenu li.menu-top:hover > a.menu-top{background:transparent;padding-left:4px}
+
+/* The open section: a champagne bar, a soft wash, and a gold label. */
+#adminmenu li.current > a.menu-top,
+#adminmenu li.wp-has-current-submenu > a.menu-top{
+  background:linear-gradient(90deg, rgba(216,190,139,.20), rgba(216,190,139,.04) 82%);
+  color:#fff;
+}
+#adminmenu li.current > a.menu-top::before,
+#adminmenu li.wp-has-current-submenu > a.menu-top::before{
+  width:4px;
+  background:linear-gradient(180deg,var(--gms-gold-400),var(--gms-gold-500));
+  box-shadow:0 0 12px rgba(216,190,139,.55);
+}
+#adminmenu li.current > a.menu-top .wp-menu-image::before,
+#adminmenu li.wp-has-current-submenu > a.menu-top .wp-menu-image::before{
+  color:var(--gms-gold-400);
+}
+
+/* Icons lean in on hover. */
+#adminmenu .wp-menu-image::before{
+  transition:transform .22s var(--gms-ease), color .18s var(--gms-ease);
+}
+#adminmenu li.menu-top:hover .wp-menu-image::before{
+  transform:translateX(2px) scale(1.14);
+  color:var(--gms-gold-400);
+}
+
+/* Submenu: a guide line down the side, items arriving in sequence. */
+#adminmenu .wp-submenu{
+  background:linear-gradient(180deg, rgba(5,11,28,.96), rgba(5,11,28,.99));
+  box-shadow:inset 3px 0 0 rgba(216,190,139,.22);
+}
+#adminmenu .wp-submenu li > a{
+  transition:color .16s var(--gms-ease), padding-left .18s var(--gms-ease);
+}
+#adminmenu .wp-submenu li > a:hover,
+#adminmenu .wp-submenu li > a:focus{color:var(--gms-gold-400);padding-left:18px}
+#adminmenu .wp-submenu li.current a{color:var(--gms-gold-400);font-weight:600}
+#adminmenu li.opensub .wp-submenu li,
+#adminmenu li.wp-has-current-submenu .wp-submenu li{
+  animation:gms-sub-in .3s var(--gms-ease) both;
+}
+#adminmenu .wp-submenu li:nth-child(2){animation-delay:.03s}
+#adminmenu .wp-submenu li:nth-child(3){animation-delay:.06s}
+#adminmenu .wp-submenu li:nth-child(4){animation-delay:.09s}
+#adminmenu .wp-submenu li:nth-child(5){animation-delay:.12s}
+#adminmenu .wp-submenu li:nth-child(n+6){animation-delay:.15s}
+@keyframes gms-sub-in{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+
+/* Separators and the collapse control. */
+#adminmenu li.wp-menu-separator{
+  background:linear-gradient(90deg, rgba(216,190,139,.24), transparent 70%);
+  height:1px;margin:9px 0;
+}
+#collapse-button{color:#98a1b6;transition:color .18s var(--gms-ease)}
+#collapse-button:hover{color:var(--gms-gold-400)}
+
+/* Counters (pending comments, updates) in champagne rather than red-on-navy. */
+#adminmenu .awaiting-mod,
+#adminmenu .update-plugins{
+  background:var(--gms-gold-500);color:var(--gms-navy-900);
+  font-weight:700;border-radius:99px;box-shadow:0 0 0 2px rgba(5,11,28,.5);
+}
+
+/* ==================================================================
+   Cards that arrive rather than appear
+   ================================================================== */
+#dashboard-widgets .postbox{
+  transition:transform .2s var(--gms-ease), box-shadow .2s var(--gms-ease);
+  animation:gms-box-in .5s var(--gms-ease) both;
+}
+#dashboard-widgets .postbox-container:nth-child(1) .postbox:nth-of-type(1){animation-delay:.04s}
+#dashboard-widgets .postbox-container:nth-child(1) .postbox:nth-of-type(2){animation-delay:.1s}
+#dashboard-widgets .postbox-container:nth-child(1) .postbox:nth-of-type(3){animation-delay:.16s}
+#dashboard-widgets .postbox-container:nth-child(1) .postbox:nth-of-type(n+4){animation-delay:.22s}
+#dashboard-widgets .postbox:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 26px rgba(5,11,28,.10);
+}
+#dashboard-widgets .postbox-header{
+  position:relative;
+  background:linear-gradient(180deg,#fff,var(--gms-paper,#faf7f0));
+}
+/* A champagne thread under each card heading, drawn on load. */
+#dashboard-widgets .postbox-header::after{
+  content:"";position:absolute;left:0;bottom:-1px;height:2px;width:46px;
+  background:linear-gradient(90deg,var(--gms-gold-500),transparent);
+  animation:gms-rule .6s var(--gms-ease) both .3s;
+}
+@keyframes gms-box-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* The empty second column reads as a target rather than a dead box. */
+#dashboard-widgets .empty-container{
+  border:1px dashed var(--gms-line);border-radius:14px;
+  background:
+    repeating-linear-gradient(135deg, rgba(192,162,101,.05) 0 8px, transparent 8px 16px);
+  transition:border-color .2s var(--gms-ease), background .2s var(--gms-ease);
+}
+#dashboard-widgets .empty-container:hover{border-color:var(--gms-gold-500)}
+
+/* Activity rows slide a touch on hover. */
+#activity-widget #published-posts li,
+#activity-widget .comment-item{
+  transition:background .16s var(--gms-ease), padding-left .16s var(--gms-ease);
+}
+#activity-widget #published-posts li:hover{padding-left:6px}
+
+@media (prefers-reduced-motion:reduce){
+  .cbw-hero,.cbw-hero__glow,.cbw-hero__logo,.cbw-hero__eyebrow,.cbw-hero__title,
+  .cbw-hero__sub,.cbw-hero__actions,.cbw-hero__side,.cbw-hero__track span,
+  .cbw-hero__track span::after,
+  #dashboard-widgets .postbox,#dashboard-widgets .postbox-header::after,
+  #adminmenu .wp-submenu li{animation:none}
+  #dashboard-widgets .postbox:hover,.cbw-hero__btn:hover{transform:none}
+}
+
+/* The one line the panel adds that the hero does not already carry. */
+.cbw-dash__note{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin:0;padding:14px 16px;
+  font-size:.86rem;color:var(--gms-muted);
+  border-top:1px solid var(--gms-line-soft,#efe8da);
+}
+.cbw-dash__note .dashicons{color:var(--gms-gold-500);font-size:17px;width:17px;height:17px}
+.cbw-dash__note strong{color:var(--gms-navy-900)}
+.cbw-dash__note a{color:var(--gms-link);text-decoration:none;font-weight:600}
+.cbw-dash__note a:hover{color:var(--gms-navy-900);text-decoration:underline}
+
+/* ==================================================================
+   The dashboard at any width
+
+   WordPress offers up to four columns. Whatever is chosen, the content
+   should not strand itself in one column beside empty ones, and it
+   should not stretch to the full width of a very large monitor.
+   ================================================================== */
+.index-php #wpbody-content{max-width:1720px}
+.index-php .cbw-hero-slot{max-width:1720px}
+
+/* WordPress always prints four containers, whatever column count is chosen,
+   so an unused third and fourth sit there as large empty rooms. Collapse them
+   when empty — and bring them back the moment the pointer is in the widget
+   area, which is exactly when a drag is under way and a target is needed. */
+#dashboard-widgets #postbox-container-3:has(> .empty-container:only-child),
+#dashboard-widgets #postbox-container-4:has(> .empty-container:only-child){
+  width:0;min-width:0;padding:0;overflow:hidden;opacity:0;
+  transition:width .22s var(--gms-ease), opacity .22s var(--gms-ease);
+}
+#dashboard-widgets:hover #postbox-container-3:has(> .empty-container:only-child),
+#dashboard-widgets:hover #postbox-container-4:has(> .empty-container:only-child),
+#dashboard-widgets:focus-within #postbox-container-3:has(> .empty-container:only-child),
+#dashboard-widgets:focus-within #postbox-container-4:has(> .empty-container:only-child){
+  width:230px;min-width:230px;opacity:1;
+}
+#dashboard-widgets .empty-container{min-height:180px;height:auto}
+
+/* Cards get a comfortable measure even when a column is very wide. */
+#dashboard-widgets .postbox{max-width:900px}
+
+@media (max-width:1200px){
+  .index-php #wpbody-content,.index-php .cbw-hero-slot{max-width:none}
+}
