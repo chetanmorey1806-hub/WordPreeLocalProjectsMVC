@@ -61,7 +61,14 @@ class CBW_Nav_Walker extends Walker_Nav_Menu {
 
 		$title = apply_filters( 'the_title', $item->title, $item->ID );
 
-		$output .= '<a' . $attributes . '>' . esc_html( $title );
+		$output .= '<a' . $attributes . '>';
+		if ( 0 === $depth ) {
+			$icon    = 'page' === $item->object ? cbw_section_icon( (int) $item->object_id ) : 'layers';
+			$output .= '<span class="cbw-nav__icon">' . cbw_get_icon( $icon, 16 ) . '</span>';
+			$output .= '<span class="cbw-nav__text">' . esc_html( $title ) . '</span>';
+		} else {
+			$output .= esc_html( $title ) . cbw_get_icon( 'arrow-right', 14, 'cbw-subnav__arrow' );
+		}
 		if ( $has_kids && 0 === $depth ) {
 			$output .= '<svg class="cbw-caret" width="10" height="7" viewBox="0 0 10 7" aria-hidden="true" focusable="false"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 		}

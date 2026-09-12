@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CBW_VERSION', '1.0.0' );
+define( 'CBW_VERSION', '1.1.0' );
 
 /**
  * Theme setup.
@@ -73,6 +73,15 @@ function cbw_assets() {
 add_action( 'wp_enqueue_scripts', 'cbw_assets' );
 
 /**
+ * Flag that scripts run before first paint. Entrance animations start their
+ * elements hidden only under .js, so nothing is lost when scripts are off.
+ */
+function cbw_js_flag() {
+	echo "<script>document.documentElement.classList.add('js');</script>\n";
+}
+add_action( 'wp_head', 'cbw_js_flag', 0 );
+
+/**
  * Widget areas.
  */
 function cbw_widgets_init() {
@@ -124,6 +133,7 @@ function cbw_body_classes( $classes ) {
 }
 add_filter( 'body_class', 'cbw_body_classes' );
 
+require_once get_template_directory() . '/inc/icons.php';
 require_once get_template_directory() . '/inc/template-tags.php';
 require_once get_template_directory() . '/inc/nav-walker.php';
 require_once get_template_directory() . '/inc/post-types.php';

@@ -127,7 +127,7 @@ function cbw_thumbnail( $size = 'cbw-card' ) {
  */
 function cbw_card( $variant = 'card' ) {
 	?>
-	<article <?php post_class( 'cbw-card cbw-card--' . esc_attr( $variant ) ); ?>>
+	<article <?php post_class( 'cbw-card cbw-card--' . esc_attr( $variant ) . ' cbw-reveal' ); ?>>
 		<a class="cbw-card__media" href="<?php the_permalink(); ?>" tabindex="-1" aria-hidden="true">
 			<?php cbw_thumbnail( 'list' === $variant ? 'cbw-thumb' : ( 'hero' === $variant ? 'cbw-hero' : 'cbw-card' ) ); ?>
 		</a>
@@ -145,23 +145,143 @@ function cbw_card( $variant = 'card' ) {
 
 /**
  * Section heading with an optional "view all" link.
+ *
+ * @param string $title    Heading.
+ * @param string $link     "View all" target.
+ * @param string $kicker   Small label above the heading.
+ * @param string $carousel ID of a carousel track to add previous/next buttons for.
+ * @param string $icon     Icon shown beside the heading.
  */
-function cbw_section_heading( $title, $link = '', $kicker = '' ) {
+function cbw_section_heading( $title, $link = '', $kicker = '', $carousel = '', $icon = '' ) {
 	echo '<header class="cbw-section__head">';
+	echo '<div class="cbw-section__headtext">';
+	if ( $icon ) {
+		echo '<span class="cbw-section__icon">' . cbw_get_icon( $icon, 20 ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput
+	}
 	echo '<div>';
 	if ( $kicker ) {
 		printf( '<span class="cbw-section__kicker">%s</span>', esc_html( $kicker ) );
 	}
 	printf( '<h2 class="cbw-section__title">%s</h2>', esc_html( $title ) );
-	echo '</div>';
-	if ( $link ) {
-		printf(
-			'<a class="cbw-viewall" href="%s">%s <span aria-hidden="true">&rarr;</span></a>',
-			esc_url( $link ),
-			esc_html__( 'View all', 'cbw' )
-		);
+	echo '</div></div>';
+	if ( $link || $carousel ) {
+		echo '<div class="cbw-section__tools">';
+		if ( $link ) {
+			printf(
+				'<a class="cbw-viewall" href="%s">%s %s</a>',
+				esc_url( $link ),
+				esc_html__( 'View all', 'cbw' ),
+				cbw_get_icon( 'arrow-right', 15 ) // phpcs:ignore WordPress.Security.EscapeOutput
+			);
+		}
+		if ( $carousel ) {
+			cbw_carousel_nav( $carousel );
+		}
+		echo '</div>';
 	}
 	echo '</header>';
+}
+
+/**
+ * Previous / next buttons for a scroll-snap carousel.
+ *
+ * @param string $target ID of the track they scroll.
+ */
+function cbw_carousel_nav( $target ) {
+	?>
+	<div class="cbw-carousel__nav">
+		<button class="cbw-carousel__btn" type="button" data-dir="-1" aria-controls="<?php echo esc_attr( $target ); ?>">
+			<?php cbw_icon( 'chevron-left', 18 ); ?><span class="screen-reader-text"><?php esc_html_e( 'Previous', 'cbw' ); ?></span>
+		</button>
+		<button class="cbw-carousel__btn" type="button" data-dir="1" aria-controls="<?php echo esc_attr( $target ); ?>">
+			<?php cbw_icon( 'chevron-right', 18 ); ?><span class="screen-reader-text"><?php esc_html_e( 'Next', 'cbw' ); ?></span>
+		</button>
+	</div>
+	<?php
+}
+
+/**
+ * Social profile links.
+ *
+ * @param string $class List class.
+ */
+function cbw_social_links( $class = 'cbw-social' ) {
+	$icons = array(
+		'LinkedIn'  => '<path d="M4.98 3.5A2.5 2.5 0 112.5 6 2.5 2.5 0 014.98 3.5zM3 8.98h4v12H3zM9.5 8.98h3.83v1.64h.05a4.2 4.2 0 013.78-2.08c4.04 0 4.79 2.66 4.79 6.12v6.32h-4v-5.6c0-1.34-.02-3.06-1.86-3.06-1.87 0-2.15 1.46-2.15 2.96v5.7h-4z"/>',
+		'X'         => '<path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.66l7.73-8.84L1.25 2.25h6.83l4.71 6.23zm-1.16 17.52h1.83L7.01 4.13H5.05z"/>',
+		'Facebook'  => '<path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7H7.9v-2.9h2.54V9.85c0-2.52 1.5-3.91 3.77-3.91 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.45 2.9h-2.33v7C18.34 21.21 22 17.06 22 12.06z"/>',
+		'Instagram' => '<path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85C2.38 3.92 3.89 2.38 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zm0 5.17A4.67 4.67 0 1016.67 12 4.67 4.67 0 0012 7.33zm0 7.7A3.03 3.03 0 1115.03 12 3.03 3.03 0 0112 15.03zm4.85-8.99a1.09 1.09 0 101.09 1.09 1.09 1.09 0 00-1.09-1.09z"/>',
+	);
+	echo '<ul class="' . esc_attr( $class ) . '" aria-label="' . esc_attr__( 'Social links', 'cbw' ) . '">';
+	foreach ( $icons as $label => $path ) {
+		printf(
+			'<li><a href="#" aria-label="%1$s"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">%2$s</svg></a></li>',
+			esc_attr( $label ),
+			$path // phpcs:ignore WordPress.Security.EscapeOutput -- fixed markup.
+		);
+	}
+	echo '</ul>';
+}
+
+/**
+ * Scrolling "Trending" headline strip under the navigation.
+ *
+ * The headlines are printed twice so the loop is seamless; the copy is hidden
+ * from assistive tech and the keyboard. The motion can be paused (WCAG 2.2.2)
+ * and does not run at all under prefers-reduced-motion.
+ */
+function cbw_ticker() {
+	$q = new WP_Query( array(
+		'posts_per_page'      => 8,
+		'ignore_sticky_posts' => true,
+		'no_found_rows'       => true,
+	) );
+	if ( ! $q->have_posts() ) {
+		return;
+	}
+
+	$items = array();
+	while ( $q->have_posts() ) {
+		$q->the_post();
+		$term    = cbw_primary_category();
+		$items[] = array(
+			'url'   => get_permalink(),
+			'title' => get_the_title(),
+			'cat'   => $term ? $term->name : '',
+		);
+	}
+	wp_reset_postdata();
+	?>
+	<section class="cbw-ticker" aria-labelledby="cbw-ticker-label">
+		<div class="cbw-wrap cbw-ticker__inner">
+			<h2 class="cbw-ticker__label" id="cbw-ticker-label">
+				<?php cbw_icon( 'flame', 15 ); ?>
+				<span><?php esc_html_e( 'Trending', 'cbw' ); ?></span>
+			</h2>
+			<div class="cbw-ticker__viewport">
+				<div class="cbw-ticker__rail" style="--cbw-ticker-time:<?php echo (int) ( count( $items ) * 7 ); ?>s">
+					<?php for ( $copy = 0; $copy < 2; $copy++ ) : ?>
+						<ul class="cbw-ticker__track"<?php echo $copy ? ' aria-hidden="true"' : ''; ?>>
+							<?php foreach ( $items as $item ) : ?>
+								<li class="cbw-ticker__item">
+									<?php if ( $item['cat'] ) : ?>
+										<span class="cbw-ticker__cat"><?php echo esc_html( $item['cat'] ); ?></span>
+									<?php endif; ?>
+									<a href="<?php echo esc_url( $item['url'] ); ?>"<?php echo $copy ? ' tabindex="-1"' : ''; ?>><?php echo esc_html( $item['title'] ); ?></a>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					<?php endfor; ?>
+				</div>
+			</div>
+			<button class="cbw-ticker__toggle" type="button" aria-pressed="false">
+				<?php cbw_icon( 'pause', 13, 'cbw-ticker__pause' ); ?>
+				<?php cbw_icon( 'play', 13, 'cbw-ticker__play' ); ?>
+				<span class="screen-reader-text"><?php esc_html_e( 'Pause headlines', 'cbw' ); ?></span>
+			</button>
+		</div>
+	</section>
+	<?php
 }
 
 /**
@@ -218,7 +338,8 @@ function cbw_newsletter() {
 	?>
 	<section class="cbw-news" aria-labelledby="cbw-news-title">
 		<div class="cbw-wrap cbw-news__inner">
-			<div>
+			<div class="cbw-news__text">
+				<span class="cbw-news__icon"><?php cbw_icon( 'mail', 26 ); ?></span>
 				<span class="cbw-section__kicker cbw-section__kicker--light"><?php esc_html_e( 'The GMS Briefing', 'cbw' ); ?></span>
 				<h2 id="cbw-news-title" class="cbw-news__title"><?php esc_html_e( 'Founder stories, funding rounds and leadership insight — weekly.', 'cbw' ); ?></h2>
 				<p class="cbw-news__sub"><?php esc_html_e( 'Join executives and founders who read Global Media Star before the market opens.', 'cbw' ); ?></p>

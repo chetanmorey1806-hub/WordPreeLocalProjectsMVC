@@ -17,7 +17,8 @@
 					</a>
 					<p class="cbw-footer__blurb"><?php bloginfo( 'description' ); ?></p>
 					<p class="cbw-footer__blurb"><?php esc_html_e( 'Business journalism for founders, chief executives and the teams building what comes next.', 'cbw' ); ?></p>
-					<a class="cbw-btn cbw-btn--gold" href="<?php echo esc_url( home_url( '/magazine/latest-issue/' ) ); ?>"><?php esc_html_e( 'Read the latest issue', 'cbw' ); ?></a>
+					<a class="cbw-btn cbw-btn--gold cbw-btn--shine" href="<?php echo esc_url( home_url( '/magazine/latest-issue/' ) ); ?>"><?php cbw_icon( 'book', 16 ); ?><?php esc_html_e( 'Read the latest issue', 'cbw' ); ?></a>
+					<?php cbw_social_links( 'cbw-social cbw-social--footer' ); ?>
 				</div>
 
 				<div class="cbw-footer__cols">
@@ -83,6 +84,12 @@
 			</div>
 		</div>
 	</footer>
+
+	<a class="cbw-totop" href="#page">
+		<svg class="cbw-totop__ring" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="22" pathLength="100"/></svg>
+		<?php cbw_icon( 'arrow-up', 18 ); ?>
+		<span class="screen-reader-text"><?php esc_html_e( 'Back to top', 'cbw' ); ?></span>
+	</a>
 </div><!-- #page -->
 
 <?php wp_footer(); ?>

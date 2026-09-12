@@ -71,7 +71,8 @@ section page, and on the homepage.
 ```
 functions.php              setup, assets, widget areas
 header.php / footer.php    top bar, masthead, mega-menu nav, structural footer
-front-page.php             magazine homepage (hero, picks, per-section blocks)
+front-page.php             magazine homepage (hero slider, picks carousel, section
+                           explorer, per-section blocks, stats band, issues carousel)
 single.php                 article: standfirst, share, author box, related
 archive.php / index.php    category, tag, author and date archives
 search.php / 404.php
@@ -82,7 +83,9 @@ page-templates/
   template-issues.php      Latest Issue / Magazine Archive
   template-contact.php     Contact
 inc/
-  template-tags.php        cards, meta, breadcrumbs, share, newsletter
+  icons.php                inline SVG icon set, section → icon map
+  template-tags.php        cards, meta, breadcrumbs, share, newsletter, ticker,
+                           carousel buttons, social links
   nav-walker.php           dropdown mega-menu walker
   post-types.php           Magazine Issue post type
   forms.php                contact + newsletter handling, Messages admin screen
@@ -90,8 +93,41 @@ inc/
   theme-mode.php           light / dark / auto, server-stamped to avoid a flash
   admin-style.php          the admin and sign-in page in the magazine's colours
 assets/css/main.css        design system (navy + gold), fully responsive
-assets/js/main.js          mobile drawer, dropdown toggles, Escape handling
+assets/js/main.js          nav panel, language dropdown, colour mode, slider,
+                           carousels, ticker, scroll reveals, count-ups, back-to-top
 ```
+
+## Homepage and motion
+
+| Block | What it does |
+|---|---|
+| **Hero slider** | The five latest stories, full width. Crossfade with a slow zoom on the photo, headline and standfirst rising in, numbered tabs whose gold bar fills as the slide's timer runs. Arrows, pause button, swipe, ←/→ keys. |
+| **Trending ticker** | Eight latest headlines scrolling under the nav on every page, with a pause button. |
+| **Editor's Picks** | Eight stories in a scroll-snap carousel — arrow buttons, mouse drag, native swipe on phones. |
+| **Explore sections** | All eight sections as photo cards with an icon, story count and sub-section count. Each card uses a different photo. |
+| **By the numbers** | Stories, issues, editors and languages, counted from the database; the numbers count up as they scroll in. |
+| **The Magazine** | Eight issue covers in a carousel, tilting slightly on hover. |
+
+**Navbar.** Each section has an icon. A gold bar grows under the hovered item,
+dropdown links arrive in sequence, and once the masthead scrolls away the bar
+turns to frosted glass with a reading-progress line along its bottom edge. The
+icons are hidden between 901 and 1280px, the widths where nine sections plus
+icons would not fit on one row.
+
+**How the slider's timer works.** The timer *is* the CSS fill animation on
+the active tab, and `animationend` moves to the next slide. Pausing is just
+`animation-play-state`, so hovering, keyboard focus and the pause button all
+stop it exactly where it is. Inactive slides are `inert` and `aria-hidden`.
+
+**Reduced motion.** Under `prefers-reduced-motion` there is no autoplay,
+marquee, zoom, drift or entrance animation; every control still works. This is
+done component by component rather than by setting every animation to a
+near-zero duration, because that would make the slider's timer end instantly
+and skip through the slides.
+
+**Nothing depends on scripts to be seen.** Entrance reveals only hide content
+under an `html.js` class set in `<head>`, and the language list opens on
+keyboard focus when scripts are off.
 
 ## Branding
 
@@ -314,13 +350,16 @@ instead. Replace them with real headshots once you have real staff.
 
 ## Languages
 
-A switcher in the top bar offers **English / हिंदी / मराठी**. The choice arrives
-as `?lang=hi` and is remembered in a `cbw_lang` cookie for a year, so the
-visitor stays in their language while browsing.
+A dropdown in the top bar (globe icon) offers **English / हिंदी / मराठी**, each
+with its native name and English name. The options are plain links, so arrow
+keys, Escape and click-away all work, and it opens rightward when the top bar
+wraps and puts the button near the left edge of a phone. The choice arrives as
+`?lang=hi` and is remembered in a `cbw_lang` cookie for a year, so the visitor
+stays in their language while browsing.
 
 | Layer | How it is translated |
 |---|---|
-| Interface (127 strings) | Theme text domain — `wp-content/languages/themes/cbw-hi_IN.l10n.php` and `cbw-mr_IN.l10n.php` |
+| Interface (152 strings) | Theme text domain — `wp-content/languages/themes/cbw-hi_IN.l10n.php` and `cbw-mr_IN.l10n.php` |
 | Page titles, menu labels | `_cbw_title_hi` / `_cbw_title_mr` post meta |
 | Standfirsts and descriptions | `_cbw_excerpt_hi` / `_cbw_excerpt_mr` post meta |
 | Page and issue body copy | `_cbw_content_hi` / `_cbw_content_mr` post meta |
@@ -350,11 +389,12 @@ Verified at 320 / 375 / 414 / 768 / 1024 / 1440 px across six page types, and
 again in Hindi and Marathi (Devanagari runs wider than Latin) —
 `scrollWidth == clientWidth` everywhere, so no page scrolls sideways.
 
-**Mobile header (≤760px).** The masthead carries only the logo. Search and the
-Advertise / Latest Issue buttons move into the nav drawer, which keeps the first
-screen mostly content — the hero image, headline, standfirst and byline all fit
-above the fold on a 375×812 phone. Tapping MENU opens the section list (each
-section expands with `+`), then search, then the two calls to action.
+**Mobile header (≤900px).** Tapping MENU slides a panel in from the left over
+a dimmed page: every section with its icon (each expands with `+`), then
+search, the two calls to action and the social links. Focus moves into the
+panel and stays there until it closes (✕, Escape, or tapping the page). Once
+the masthead has scrolled away, the bar shows the GMS mark as well. Below
+760px the masthead carries only the logo, and the slider's tabs become dots.
 
 Below 560px the reading size drops to 16px and section headers, forms and the
 newsletter band tighten up.

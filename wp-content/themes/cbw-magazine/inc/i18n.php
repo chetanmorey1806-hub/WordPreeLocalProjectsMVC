@@ -20,9 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function cbw_languages() {
 	return array(
-		'en' => array( 'label' => 'English', 'short' => 'EN', 'locale' => 'en_US', 'html' => 'en' ),
-		'hi' => array( 'label' => 'हिंदी',   'short' => 'हि', 'locale' => 'hi_IN', 'html' => 'hi' ),
-		'mr' => array( 'label' => 'मराठी',   'short' => 'मर', 'locale' => 'mr_IN', 'html' => 'mr' ),
+		'en' => array( 'label' => 'English', 'name' => 'English', 'short' => 'EN', 'locale' => 'en_US', 'html' => 'en' ),
+		'hi' => array( 'label' => 'हिंदी',   'name' => 'Hindi',   'short' => 'हि', 'locale' => 'hi_IN', 'html' => 'hi' ),
+		'mr' => array( 'label' => 'मराठी',   'name' => 'Marathi', 'short' => 'मर', 'locale' => 'mr_IN', 'html' => 'mr' ),
 	);
 }
 
@@ -247,22 +247,44 @@ function cbw_lang_url( $lang ) {
 }
 
 /**
- * Render the language switcher.
+ * Render the language switcher: a disclosure button over a list of links.
+ *
+ * The options are ordinary links, so the switch still works with scripts off
+ * (the list opens on focus instead of on click).
  */
 function cbw_lang_switcher() {
 	$langs   = cbw_languages();
 	$current = cbw_lang();
+	$cur     = $langs[ $current ];
 	?>
-	<div class="cbw-lang" role="group" aria-label="<?php esc_attr_e( 'Language', 'cbw' ); ?>">
-		<?php foreach ( $langs as $code => $meta ) : ?>
-			<a
-				class="cbw-lang__opt<?php echo $code === $current ? ' is-current' : ''; ?>"
-				href="<?php echo esc_url( cbw_lang_url( $code ) ); ?>"
-				hreflang="<?php echo esc_attr( $meta['html'] ); ?>"
-				lang="<?php echo esc_attr( $meta['html'] ); ?>"
-				<?php echo $code === $current ? ' aria-current="true"' : ''; ?>
-			><?php echo esc_html( $meta['label'] ); ?></a>
-		<?php endforeach; ?>
+	<div class="cbw-lang">
+		<button class="cbw-lang__btn" type="button" aria-expanded="false" aria-controls="cbw-lang-menu">
+			<?php cbw_icon( 'globe', 15 ); ?>
+			<span class="cbw-lang__current" lang="<?php echo esc_attr( $cur['html'] ); ?>"><?php echo esc_html( $cur['label'] ); ?></span>
+			<?php cbw_icon( 'chevron-down', 13, 'cbw-lang__caret' ); ?>
+			<span class="screen-reader-text"><?php esc_html_e( 'Choose language', 'cbw' ); ?></span>
+		</button>
+		<ul class="cbw-lang__menu" id="cbw-lang-menu" aria-label="<?php esc_attr_e( 'Language', 'cbw' ); ?>">
+			<?php foreach ( $langs as $code => $meta ) : ?>
+				<li>
+					<a
+						class="cbw-lang__opt<?php echo $code === $current ? ' is-current' : ''; ?>"
+						href="<?php echo esc_url( cbw_lang_url( $code ) ); ?>"
+						hreflang="<?php echo esc_attr( $meta['html'] ); ?>"
+						<?php echo $code === $current ? ' aria-current="true"' : ''; ?>
+					>
+						<span class="cbw-lang__abbr" aria-hidden="true"><?php echo esc_html( $meta['short'] ); ?></span>
+						<span class="cbw-lang__names">
+							<span class="cbw-lang__label" lang="<?php echo esc_attr( $meta['html'] ); ?>"><?php echo esc_html( $meta['label'] ); ?></span>
+							<?php if ( $meta['label'] !== $meta['name'] ) : ?>
+								<span class="cbw-lang__name" lang="en"><?php echo esc_html( $meta['name'] ); ?></span>
+							<?php endif; ?>
+						</span>
+						<?php cbw_icon( 'check', 15, 'cbw-lang__check' ); ?>
+					</a>
+				</li>
+			<?php endforeach; ?>
+		</ul>
 	</div>
 	<?php
 }
