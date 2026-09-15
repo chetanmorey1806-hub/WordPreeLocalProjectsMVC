@@ -129,6 +129,19 @@
 }
 .cbw-shelf__hint{display:inline-flex;margin-top:10px;font-size:.82rem;color:rgba(255,255,255,.68)}
 
+/* Pause / play for the autoplay; the icon shows what a press will do. */
+.cbw-shelf__play{
+  display:flex;align-items:center;justify-content:center;margin:14px auto 0;
+  width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.42);
+  background:rgba(7,17,29,.35);color:#fff;cursor:pointer;
+  transition:background .2s ease,border-color .2s ease,color .2s ease;
+}
+.cbw-shelf__play:hover,.cbw-shelf__play:focus-visible{background:var(--gold-500);border-color:var(--gold-500);color:var(--navy-900)}
+.cbw-shelf__play:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.cbw-shelf__play .cbw-icon--play,
+.cbw-shelf.is-paused .cbw-shelf__play .cbw-icon--pause{display:none}
+.cbw-shelf.is-paused .cbw-shelf__play .cbw-icon--play{display:block}
+
 @media (max-width:700px){
   .cbw-shelf{--cw:min(52vw,210px)}
   .cbw-shelf__nav{width:44px;height:44px}
@@ -146,7 +159,8 @@ html:not(.js) .cbw-shelf__item{
   filter:none;-webkit-box-reflect:none;scroll-snap-align:center;
 }
 html:not(.js) .cbw-shelf__nav,
-html:not(.js) .cbw-shelf__hint{display:none}
+html:not(.js) .cbw-shelf__hint,
+html:not(.js) .cbw-shelf__play{display:none}
 
 /* ------------------------------------------------------------------
    The reader

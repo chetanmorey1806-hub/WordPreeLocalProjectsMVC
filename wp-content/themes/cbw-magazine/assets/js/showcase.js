@@ -74,10 +74,62 @@
 		dateEl.textContent = items[active].getAttribute('data-date');
 	}
 
-	function go(i, focus) {
+	function go(i, focus, auto) {
 		active = (i + count) % count;
 		layout();
 		if (focus) { items[active].focus({ preventScroll: true }); }
+		// A move by hand restarts the autoplay count, so the cover just
+		// chosen stays put for the full interval.
+		if (!auto) { restart(); }
+	}
+
+	/*
+	 * Autoplay: the next issue every two seconds. It holds while the mouse is
+	 * on the front cover or keyboard focus is on the shelf, while a book is
+	 * open, and while the shelf is off screen or the tab hidden. It never
+	 * starts under reduced motion, and the pause button stops it outright.
+	 */
+	var DELAY = 2000;
+	var playBtn = shelf.querySelector('.cbw-shelf__play');
+	var autoTimer = 0;
+	var held = false;
+	var inView = !('IntersectionObserver' in window);
+
+	function restart() {
+		window.clearTimeout(autoTimer);
+		autoTimer = window.setTimeout(function () {
+			if (!shelf.classList.contains('is-paused') && !held && !dlg.open && !document.hidden && inView) {
+				go(active + 1, false, true);
+			}
+			restart();
+		}, DELAY);
+	}
+
+	function setPaused(paused) {
+		shelf.classList.toggle('is-paused', paused);
+		if (playBtn) { playBtn.setAttribute('aria-pressed', paused ? 'true' : 'false'); }
+		restart();
+	}
+
+	if (playBtn) {
+		playBtn.addEventListener('click', function () {
+			setPaused(!shelf.classList.contains('is-paused'));
+		});
+	}
+	stage.addEventListener('pointerover', function (e) {
+		if (e.pointerType === 'mouse') { held = !!e.target.closest('.cbw-shelf__item.is-active'); }
+	});
+	stage.addEventListener('pointerleave', function () { held = false; });
+	shelf.addEventListener('focusin', function (e) {
+		if (e.target.matches(':focus-visible') && e.target !== playBtn) { held = true; }
+	});
+	shelf.addEventListener('focusout', function (e) {
+		if (!e.relatedTarget || !shelf.contains(e.relatedTarget)) { held = false; }
+	});
+	if (!inView) {
+		new IntersectionObserver(function (entries) {
+			inView = entries[0].isIntersecting;
+		}, { threshold: 0.35 }).observe(shelf);
 	}
 
 	shelf.addEventListener('click', function (e) {
@@ -131,6 +183,7 @@
 			}, 1200);
 		}
 		layout();
+		setPaused(still());
 	}
 
 	if (still() || !('IntersectionObserver' in window)) {

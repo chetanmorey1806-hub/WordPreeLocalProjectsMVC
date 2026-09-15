@@ -298,6 +298,11 @@ function cbw_issue_showcase() {
 				<span class="cbw-shelf__date"><?php echo esc_html( get_the_date( 'F Y', $issues[0] ) ); ?></span>
 				<span class="cbw-shelf__hint"><?php esc_html_e( 'Tap a cover to open the issue', 'cbw' ); ?></span>
 			</p>
+			<button class="cbw-shelf__play" type="button" aria-pressed="false">
+				<?php cbw_icon( 'pause', 16 ); ?>
+				<?php cbw_icon( 'play', 16 ); ?>
+				<span class="screen-reader-text"><?php esc_html_e( 'Pause slideshow', 'cbw' ); ?></span>
+			</button>
 		</div>
 
 		<?php foreach ( $issues as $issue ) : ?>
