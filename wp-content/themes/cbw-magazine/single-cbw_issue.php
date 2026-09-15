@@ -14,7 +14,7 @@ while ( have_posts() ) :
 		<?php cbw_breadcrumbs(); ?>
 
 		<div class="cbw-issue-single">
-			<figure class="cbw-issue-single__cover"><?php cbw_thumbnail( 'cbw-cover' ); ?></figure>
+			<figure class="cbw-issue-single__cover"><?php cbw_thumbnail( 'cbw-cover' ); ?><?php cbw_thumb_credit( 'cbw-credit--hero' ); ?></figure>
 
 			<div class="cbw-issue-single__body">
 				<span class="cbw-section__kicker"><?php echo esc_html( get_the_date( 'F Y' ) ); ?> <?php esc_html_e( 'Issue', 'cbw' ); ?></span>

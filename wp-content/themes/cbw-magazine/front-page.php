@@ -103,6 +103,10 @@ if ( $cbw_hero->have_posts() ) :
 endif;
 wp_reset_postdata();
 
+/* ---------------------------------------------- Magazine showcase */
+// A 3D shelf of every issue; each cover opens into a flipbook of that issue.
+cbw_issue_showcase();
+
 /* ------------------------------------------ Editor's picks carousel */
 $cbw_picks = new WP_Query( array(
 	'posts_per_page' => 8,
@@ -287,33 +291,6 @@ $cbw_stats = array(
 </section>
 <?php
 
-/* ------------------------------------------------ Magazine issues */
-$cbw_issues = new WP_Query( array(
-	'post_type'      => 'cbw_issue',
-	'posts_per_page' => 8,
-	'no_found_rows'  => true,
-) );
-
-if ( $cbw_issues->have_posts() ) : ?>
-	<section class="cbw-section cbw-section--issues">
-		<div class="cbw-wrap">
-			<?php cbw_section_heading( __( 'The Magazine', 'cbw' ), home_url( '/magazine/' ), __( 'In print & digital', 'cbw' ), 'cbw-issues-track', 'book' ); ?>
-			<div class="cbw-carousel cbw-carousel--issues">
-				<div class="cbw-carousel__track" id="cbw-issues-track" tabindex="0" role="region" aria-label="<?php esc_attr_e( 'The Magazine', 'cbw' ); ?>">
-					<?php while ( $cbw_issues->have_posts() ) : $cbw_issues->the_post(); ?>
-						<div class="cbw-carousel__item">
-							<article class="cbw-issue">
-								<a class="cbw-issue__cover" href="<?php the_permalink(); ?>" tabindex="-1" aria-hidden="true"><?php cbw_thumbnail( 'cbw-cover' ); ?></a>
-								<h3 class="cbw-issue__title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-								<p class="cbw-issue__meta"><?php echo esc_html( get_the_date( 'F Y' ) ); ?></p>
-							</article>
-						</div>
-					<?php endwhile; ?>
-				</div>
-			</div>
-		</div>
-	</section>
-<?php endif;
-wp_reset_postdata();
+// The issues live in the showcase near the top of the page.
 
 get_footer();

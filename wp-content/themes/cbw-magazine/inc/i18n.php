@@ -1,6 +1,7 @@
 <?php
 /**
- * Trilingual support: English, Hindi and Marathi.
+ * Multilingual support: English, Hindi, Marathi, German, French, Spanish and
+ * Arabic. Arabic reads right to left, so its pages are mirrored.
  *
  * The interface is translated through the theme text domain. Content that
  * lives in the database — page titles, category names, descriptions — is
@@ -14,15 +15,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Supported languages: code => label, locale, html lang.
+ * Supported languages: code => label, locale, html lang, script, and
+ * 'dir' => 'rtl' for right-to-left languages.
  *
  * @return array
  */
 function cbw_languages() {
 	return array(
-		'en' => array( 'label' => 'English', 'name' => 'English', 'short' => 'EN', 'locale' => 'en_US', 'html' => 'en' ),
-		'hi' => array( 'label' => 'हिंदी',   'name' => 'Hindi',   'short' => 'हि', 'locale' => 'hi_IN', 'html' => 'hi' ),
-		'mr' => array( 'label' => 'मराठी',   'name' => 'Marathi', 'short' => 'मर', 'locale' => 'mr_IN', 'html' => 'mr' ),
+		'en' => array( 'label' => 'English',  'name' => 'English', 'short' => 'EN', 'locale' => 'en_US', 'html' => 'en', 'script' => 'latin' ),
+		'hi' => array( 'label' => 'हिंदी',    'name' => 'Hindi',   'short' => 'हि', 'locale' => 'hi_IN', 'html' => 'hi', 'script' => 'devanagari' ),
+		'mr' => array( 'label' => 'मराठी',    'name' => 'Marathi', 'short' => 'मर', 'locale' => 'mr_IN', 'html' => 'mr', 'script' => 'devanagari' ),
+		'de' => array( 'label' => 'Deutsch',  'name' => 'German',  'short' => 'DE', 'locale' => 'de_DE', 'html' => 'de', 'script' => 'latin' ),
+		'fr' => array( 'label' => 'Français', 'name' => 'French',  'short' => 'FR', 'locale' => 'fr_FR', 'html' => 'fr', 'script' => 'latin' ),
+		'es' => array( 'label' => 'Español',  'name' => 'Spanish', 'short' => 'ES', 'locale' => 'es_ES', 'html' => 'es', 'script' => 'latin' ),
+		'ar' => array( 'label' => 'العربية',  'name' => 'Arabic',  'short' => 'ع',  'locale' => 'ar',    'html' => 'ar', 'script' => 'arabic', 'dir' => 'rtl' ),
 	);
 }
 
@@ -106,12 +112,36 @@ function cbw_html_lang( $output, $doctype ) {
 add_filter( 'language_attributes', 'cbw_html_lang', 10, 2 );
 
 /**
- * Body class for language-specific typography.
+ * Right-to-left languages flip the page. With the locale's direction set,
+ * WordPress prints dir="rtl" on <html> and loads the -rtl stylesheets: the
+ * theme's main-rtl.css and the admin bar's own.
+ */
+function cbw_text_direction() {
+	global $wp_locale;
+	if ( is_admin() || ! $wp_locale ) {
+		return;
+	}
+	$langs = cbw_languages();
+	$lang  = cbw_lang();
+	if ( isset( $langs[ $lang ]['dir'] ) && 'rtl' === $langs[ $lang ]['dir'] ) {
+		$wp_locale->text_direction = 'rtl';
+		// The style queue takes its direction when it is first created, which
+		// can be earlier than this; tell it too so the -rtl files are used.
+		wp_styles()->text_direction = 'rtl';
+	}
+}
+add_action( 'init', 'cbw_text_direction' );
+
+/**
+ * Body classes for language- and script-specific typography:
+ * lang-hi, lang-devanagari, lang-ar, lang-arabic …
  */
 function cbw_lang_body_class( $classes ) {
-	$classes[] = 'lang-' . cbw_lang();
-	if ( 'en' !== cbw_lang() ) {
-		$classes[] = 'lang-devanagari';
+	$langs     = cbw_languages();
+	$lang      = cbw_lang();
+	$classes[] = 'lang-' . $lang;
+	if ( 'latin' !== $langs[ $lang ]['script'] ) {
+		$classes[] = 'lang-' . $langs[ $lang ]['script'];
 	}
 	return $classes;
 }

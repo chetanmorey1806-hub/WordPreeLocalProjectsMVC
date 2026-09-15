@@ -343,8 +343,10 @@ function cbwEach(list, fn) {
 		});
 
 		root.addEventListener('keydown', function (e) {
-			if (e.key === 'ArrowRight') { go(cur + 1); }
-			else if (e.key === 'ArrowLeft') { go(cur - 1); }
+			// On a right-to-left page the next slide lies to the left.
+			var rtl = document.documentElement.dir === 'rtl';
+			if (e.key === (rtl ? 'ArrowLeft' : 'ArrowRight')) { go(cur + 1); }
+			else if (e.key === (rtl ? 'ArrowRight' : 'ArrowLeft')) { go(cur - 1); }
 		});
 
 		// Swipe. A drag that moved suppresses the click it would otherwise end in.
@@ -359,7 +361,8 @@ function cbwEach(list, fn) {
 			var dy = e.clientY - sy;
 			if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) {
 				dragged = true;
-				go(cur + (dx < 0 ? 1 : -1));
+				// Swiping toward where the page reads to moves on.
+				go(cur + ((dx < 0) !== (document.documentElement.dir === 'rtl') ? 1 : -1));
 			}
 		});
 		stage.addEventListener('pointercancel', function () { down = false; });
@@ -386,14 +389,16 @@ function cbwEach(list, fn) {
 			var max = track.scrollWidth - track.clientWidth - 2;
 			cbwEach(btns, function (b) {
 				var dir = +b.getAttribute('data-dir');
-				b.disabled = dir < 0 ? track.scrollLeft <= 2 : track.scrollLeft >= max;
+				// Right-to-left tracks count scrollLeft down from 0, so use its size.
+				var pos = Math.abs(track.scrollLeft);
+				b.disabled = dir < 0 ? pos <= 2 : pos >= max;
 			});
 		}
 
 		cbwEach(btns, function (b) {
 			b.addEventListener('click', function () {
 				track.scrollBy({
-					left: +b.getAttribute('data-dir') * track.clientWidth * 0.9,
+					left: +b.getAttribute('data-dir') * track.clientWidth * 0.9 * (getComputedStyle(track).direction === 'rtl' ? -1 : 1),
 					behavior: cbwReduceMotion ? 'auto' : 'smooth'
 				});
 			});

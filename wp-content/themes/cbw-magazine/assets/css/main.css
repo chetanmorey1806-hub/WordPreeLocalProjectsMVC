@@ -6,14 +6,44 @@
    and gold rules are the same midnight navy and champagne in both.
    ------------------------------------------------------------------ */
 :root{
-  --navy-950:#050b1c;
-  --navy-900:#0a1330;
-  --navy-800:#101c42;
+  /* ---------- Brand: Midnight Navy + Champagne Gold + Ivory ---------- */
+  --navy:#0B1726;
+  --navy-dark:#07111D;
+  --navy-light:#101F33;
+  --card-navy:#16263A;
 
-  --gold-500:#c0a265;
-  --gold-400:#d8be8b;
+  /* ---------- Gold ---------- */
+  --gold:#C9A44C;
+  --gold-light:#E3C875;
+  --gold-dark:#9C762A;
 
-  --wrap:1240px;
+  /* ---------- Light ---------- */
+  --ivory:#F7F4EC;
+  --white:#FFFFFF;
+
+  /* ---------- Text ---------- */
+  --black:#18202A;
+  --gray:#7B8490;
+  --gray-light:#AAB1BA;
+
+  /* ---------- Borders ---------- */
+  --border-light:#D9D4C8;
+  --border-dark:rgba(255,255,255,0.10);
+
+  /* ---------- Layout ---------- */
+  --container:1240px;
+
+  /* ---------- Animation ---------- */
+  --transition:0.35s ease;
+
+  /* Earlier token names, pointed at the palette so every rule follows it. */
+  --navy-950:var(--navy-dark);
+  --navy-900:var(--navy);
+  --navy-800:var(--navy-light);
+  --gold-500:var(--gold);
+  --gold-400:var(--gold-light);
+  --wrap:var(--container);
+
   --gap:28px;
   --radius:10px;
   --radius-sm:6px;
@@ -24,59 +54,63 @@
 
 /* ------------------------------------------------------------------
    Light theme (default) — ivory paper.
-   Every value here is contrast-checked against the ground it sits on,
-   including the slightly darker --bg-soft band.
+   Every text colour here is contrast-checked (WCAG AA, 4.5:1) against
+   each light ground, including the darker --bg-soft and --bg-tint bands.
    ------------------------------------------------------------------ */
 :root,
 [data-theme="light"]{
   color-scheme:light;
 
-  --bg:#fbf8f2;
-  --bg-soft:#f4efe4;
-  --bg-tint:#eae2d3;
-  --surface:#ffffff;
+  --bg:var(--ivory);
+  --bg-soft:#EFEADF;
+  --bg-tint:#E6DFD0;
+  --surface:var(--white);
 
-  --ink:#141b2e;
-  --body:#3b4358;
-  --muted:#61687a;
+  --ink:var(--black);
+  --body:#3A4350;
+  /* --gray is 3.4:1 on ivory: right for icons and rules, too faint for
+     small text. This is the same grey taken to 4.5:1 on every ground. */
+  --muted:#59616D;
 
-  --link:#2b4079;
-  --link-strong:#1c2c5e;
-  --accent-text:#806434;
+  --link:#24416A;
+  --link-strong:var(--navy-light);
+  /* --gold-dark is 3.8:1 on ivory (large type only); small gold text
+     uses this deeper shade of it. */
+  --accent-text:#7A5B1E;
   --badge:#9c2f3b;
 
-  --line:#e3daca;
-  --line-soft:#efe8da;
-  --rule:#101c42;
+  --line:var(--border-light);
+  --line-soft:#E8E3D8;
+  --rule:var(--navy-light);
 
-  --shadow-sm:0 1px 2px rgba(5,11,28,.05),0 2px 8px rgba(5,11,28,.05);
-  --shadow-md:0 4px 12px rgba(5,11,28,.07),0 12px 32px rgba(5,11,28,.07);
+  --shadow-sm:0 1px 2px rgba(7,17,29,.05),0 2px 8px rgba(7,17,29,.05);
+  --shadow-md:0 4px 12px rgba(7,17,29,.07),0 12px 32px rgba(7,17,29,.07);
 }
 
 /* ------------------------------------------------------------------
-   Dark theme — midnight navy paper. Cards lift above the page rather
-   than sitting on it, so the hierarchy survives the inversion.
+   Dark theme — midnight navy paper. Cards (--card-navy) lift above the
+   page rather than sitting on it, so the hierarchy survives the inversion.
    ------------------------------------------------------------------ */
 [data-theme="dark"]{
   color-scheme:dark;
 
-  --bg:#0a1330;
-  --bg-soft:#0d1836;
-  --bg-tint:#16224a;
-  --surface:#111d45;
+  --bg:var(--navy);
+  --bg-soft:#0E1B2C;
+  --bg-tint:#1B2C42;
+  --surface:var(--card-navy);
 
-  --ink:#f3efe4;
-  --body:#c8cede;
-  --muted:#98a1b6;
+  --ink:var(--ivory);
+  --body:#CDD2D9;
+  --muted:var(--gray-light);
 
-  --link:#9fb6e6;
-  --link-strong:#c6d5f5;
-  --accent-text:#d8be8b;
+  --link:#A9BCD6;
+  --link-strong:#D0DCEB;
+  --accent-text:var(--gold-light);
   --badge:#e59aa3;
 
-  --line:#24305a;
-  --line-soft:#1b2650;
-  --rule:#d8be8b;
+  --line:var(--border-dark);
+  --line-soft:rgba(255,255,255,0.06);
+  --rule:var(--gold-light);
 
   --shadow-sm:0 1px 2px rgba(0,0,0,.34),0 2px 8px rgba(0,0,0,.28);
   --shadow-md:0 4px 12px rgba(0,0,0,.4),0 12px 32px rgba(0,0,0,.34);
@@ -132,7 +166,7 @@ button{font:inherit}
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   font-family:var(--font-head);font-weight:600;font-size:.84rem;letter-spacing:.02em;
   padding:11px 20px;border-radius:var(--radius-sm);border:1.5px solid transparent;
-  cursor:pointer;transition:.18s ease;white-space:nowrap;
+  cursor:pointer;transition:var(--transition);white-space:nowrap;
 }
 .cbw-btn--gold{background:var(--gold-500);color:var(--navy-900);border-color:var(--gold-500)}
 .cbw-btn--gold:hover{background:var(--gold-400);border-color:var(--gold-400);color:var(--navy-900);transform:translateY(-1px)}
@@ -173,17 +207,17 @@ button{font:inherit}
 .cbw-topbar__menu a:hover{color:var(--gold-400)}
 .cbw-social{list-style:none;display:flex;gap:14px;margin:0 0 0 auto;padding:0}
 .cbw-topbar__nav + .cbw-social{margin-left:0}
-.cbw-social a{color:rgba(255,255,255,.6);display:flex;transition:.16s}
+.cbw-social a{color:rgba(255,255,255,.6);display:flex;transition:var(--transition)}
 .cbw-social a:hover{color:var(--gold-400)}
 
 /* ============================================================
    Header / brand
    ============================================================ */
 .cbw-header{background:var(--bg);border-bottom:1px solid var(--line-soft)}
-.cbw-header__inner{display:flex;align-items:center;gap:32px;padding-top:22px;padding-bottom:22px;flex-wrap:wrap}
+.cbw-header__inner{display:flex;align-items:center;gap:32px;padding-top:10px;padding-bottom:10px;flex-wrap:wrap}
 .cbw-brand__link{display:flex;align-items:center;gap:14px}
 .custom-logo-link{display:block;line-height:0}
-.custom-logo{width:auto;height:112px;max-width:100%}
+.custom-logo{width:auto;height:78px;max-width:100%}
 .cbw-brand__mark{
   display:grid;place-items:center;width:52px;height:52px;flex:0 0 auto;
   background:var(--navy-800);color:var(--gold-400);
@@ -194,13 +228,16 @@ button{font:inherit}
 .cbw-brand__name{font-family:var(--font-head);font-weight:800;font-size:1.5rem;color:var(--ink);letter-spacing:-.02em;line-height:1.1}
 .cbw-brand__tag{font-size:.73rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-weight:500}
 .cbw-header__actions{display:flex;align-items:center;gap:12px;margin-left:auto;min-width:0;flex-wrap:wrap}
+/* Compact controls, so the masthead stays a slim band above the menu. */
+.cbw-header__actions .cbw-btn{padding:8px 16px}
+.cbw-header__actions .cbw-search__field{padding-top:8px;padding-bottom:8px}
 
 /* Search */
 .cbw-search{position:relative;display:flex;align-items:center;min-width:0}
 .cbw-search__icon{position:absolute;left:13px;color:var(--muted);pointer-events:none}
 .cbw-search__field{
   width:260px;min-width:0;padding:10px 76px 10px 38px;border:1px solid var(--line);border-radius:var(--radius-sm);
-  font:inherit;font-size:.86rem;color:var(--ink);background:var(--bg-soft);transition:.18s;
+  font:inherit;font-size:.86rem;color:var(--ink);background:var(--bg-soft);transition:var(--transition);
 }
 .cbw-search__field:focus{background:var(--surface);border-color:var(--link);width:300px;outline:none}
 .cbw-search__submit{
@@ -215,9 +252,9 @@ button{font:inherit}
    make it the containing block for the fixed mobile panel inside it. */
 .cbw-nav{position:sticky;top:0;z-index:200;box-shadow:0 1px 0 rgba(255,255,255,.06);transition:box-shadow .3s ease}
 .cbw-nav::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--navy-800);transition:background-color .3s ease}
-.cbw-nav.is-stuck{box-shadow:0 12px 30px -14px rgba(5,11,28,.6)}
+.cbw-nav.is-stuck{box-shadow:0 12px 30px -14px rgba(7,17,29,.6)}
 .cbw-nav.is-stuck::before{
-  background:rgba(16,28,66,.88);
+  background:rgba(16,31,51,.88);
   -webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);
 }
 .cbw-nav__progress{
@@ -294,9 +331,9 @@ button{font:inherit}
 .cbw-subnav li:nth-child(6){transition-delay:.15s}
 .cbw-subnav__link{
   display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 20px;font-family:var(--font-head);
-  font-size:.85rem;font-weight:500;color:var(--body);transition:.18s;
+  font-size:.85rem;font-weight:500;color:var(--body);transition:var(--transition);
 }
-.cbw-subnav__arrow{flex:0 0 auto;color:var(--accent-text);opacity:0;transform:translateX(-8px);transition:.2s}
+.cbw-subnav__arrow{flex:0 0 auto;color:var(--accent-text);opacity:0;transform:translateX(-8px);transition:var(--transition)}
 .cbw-subnav__link:hover{background:var(--bg-tint);color:var(--ink);padding-left:26px}
 .cbw-subnav__link:hover .cbw-subnav__arrow,
 .cbw-subnav__link:focus-visible .cbw-subnav__arrow{opacity:1;transform:none}
@@ -309,7 +346,7 @@ button{font:inherit}
   text-transform:uppercase;letter-spacing:.06em;
 }
 .cbw-burger__bars,.cbw-burger__bars::before,.cbw-burger__bars::after{
-  display:block;width:20px;height:2px;background:currentColor;border-radius:2px;transition:.2s;
+  display:block;width:20px;height:2px;background:currentColor;border-radius:2px;transition:var(--transition);
 }
 .cbw-burger__bars{position:relative}
 .cbw-burger__bars::before,.cbw-burger__bars::after{content:"";position:absolute;left:0}
@@ -348,7 +385,7 @@ button{font:inherit}
 .cbw-section__icon{
   display:grid;place-items:center;flex:0 0 auto;width:48px;height:48px;border-radius:14px;
   background:linear-gradient(145deg,var(--navy-800),var(--navy-900));color:var(--gold-400);
-  box-shadow:0 10px 22px -12px rgba(16,28,66,.7);transition:transform .45s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 10px 22px -12px rgba(16,31,51,.7);transition:transform .45s cubic-bezier(.34,1.56,.64,1);
 }
 .cbw-section:hover .cbw-section__icon{transform:rotate(-8deg) scale(1.06)}
 .cbw-section__tools{display:flex;align-items:center;gap:18px;flex:0 0 auto}
@@ -437,7 +474,7 @@ button{font:inherit}
 }
 .cbw-sectionhead--photo::after{
   content:"";position:absolute;inset:0;
-  background:linear-gradient(115deg,rgba(10,19,48,.94) 0%,rgba(10,19,48,.80) 45%,rgba(5,11,28,.64) 100%);
+  background:linear-gradient(115deg,rgba(11,23,38,.94) 0%,rgba(11,23,38,.80) 45%,rgba(7,17,29,.64) 100%);
 }
 .cbw-sectionhead--photo>.cbw-wrap{position:relative;z-index:1}
 .cbw-sectionhead--photo{padding:60px 0 52px}
@@ -490,7 +527,7 @@ button{font:inherit}
 .cbw-share__label{font-family:var(--font-head);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .cbw-share__link{
   padding:7px 14px;border:1px solid var(--line);border-radius:100px;
-  font-family:var(--font-head);font-size:.78rem;font-weight:500;color:var(--body);transition:.16s;
+  font-family:var(--font-head);font-size:.78rem;font-weight:500;color:var(--body);transition:var(--transition);
 }
 .cbw-share__link:hover{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 
@@ -505,7 +542,7 @@ button{font:inherit}
 .cbw-author__bio{font-size:.9rem;color:var(--muted);margin:0}
 
 .cbw-postnav{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:44px}
-.cbw-postnav__item{padding:20px;border:1px solid var(--line);border-radius:var(--radius);transition:.18s}
+.cbw-postnav__item{padding:20px;border:1px solid var(--line);border-radius:var(--radius);transition:var(--transition)}
 .cbw-postnav__item:hover{border-color:var(--ink);box-shadow:var(--shadow-sm)}
 .cbw-postnav__item--next{text-align:right;grid-column:2}
 .cbw-postnav__dir{display:block;font-family:var(--font-head);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-text);margin-bottom:6px}
@@ -525,7 +562,7 @@ button{font:inherit}
 
 .cbw-rank{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line-soft)}
 .cbw-rank:last-child{border-bottom:0;padding-bottom:0}
-.cbw-rank__num{font-family:var(--font-head);font-size:1.35rem;font-weight:800;color:#978771;line-height:1;flex:0 0 auto}
+.cbw-rank__num{font-family:var(--font-head);font-size:1.35rem;font-weight:800;color:#9c762a;line-height:1;flex:0 0 auto}
 .cbw-rank__title{font-size:.92rem;line-height:1.4;margin:0}
 .cbw-rank__title a{color:var(--ink)}
 .cbw-rank__title a:hover{color:var(--link)}
@@ -587,7 +624,7 @@ button{font:inherit}
   width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:var(--radius-sm);
   font:inherit;font-size:.92rem;color:var(--ink);background:var(--surface);
 }
-.cbw-form input:focus,.cbw-form select:focus,.cbw-form textarea:focus{outline:none;border-color:var(--link);box-shadow:0 0 0 3px rgba(43,64,121,.14)}
+.cbw-form input:focus,.cbw-form select:focus,.cbw-form textarea:focus{outline:none;border-color:var(--link);box-shadow:0 0 0 3px rgba(36,65,106,.14)}
 .cbw-form__note{font-size:.8rem;color:var(--muted);margin:14px 0 0}
 
 /* Page hero image */
@@ -643,7 +680,7 @@ button{font:inherit}
   transition:border-color .2s,background-color .2s;
 }
 .cbw-lang__btn .cbw-icon--globe{color:var(--gold-400);transition:transform .6s ease}
-.cbw-lang__btn:hover,.cbw-lang.is-open .cbw-lang__btn{border-color:var(--gold-500);background:rgba(192,162,101,.18)}
+.cbw-lang__btn:hover,.cbw-lang.is-open .cbw-lang__btn{border-color:var(--gold-500);background:rgba(201,164,76,.18)}
 .cbw-lang__btn:hover .cbw-icon--globe{transform:rotate(180deg)}
 .cbw-lang__caret{opacity:.75;transition:transform .25s}
 .cbw-lang.is-open .cbw-lang__caret{transform:rotate(180deg)}
@@ -698,8 +735,32 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 .lang-devanagari .cbw-hero__title,.lang-devanagari .cbw-article__title{line-height:1.32}
 .lang-devanagari .cbw-card__title{line-height:1.48}
 .lang-devanagari .cbw-nav__link{font-size:.8rem;letter-spacing:.01em}
+/* German, French and Spanish section names run longer than English; tighten
+   the desktop menu a little so all nine stay on one row. */
+@media (min-width:901px){
+  .lang-de .cbw-nav__link,.lang-fr .cbw-nav__link,.lang-es .cbw-nav__link{
+    padding-left:8px;padding-right:8px;font-size:.76rem;letter-spacing:.02em;
+  }
+}
 .lang-devanagari .cbw-badge,.lang-devanagari .cbw-section__kicker{letter-spacing:.04em}
 .lang-devanagari .cbw-prose{line-height:1.9}
+
+/* Arabic: Noto Sans Arabic, and no letter-spacing anywhere; tracking pulls
+   apart the joins between Arabic letters. */
+.lang-arabic{
+  --font-head:"Noto Sans Arabic","Poppins",-apple-system,"Segoe UI",sans-serif;
+  --font-body:"Noto Sans Arabic","Inter",-apple-system,"Segoe UI",sans-serif;
+}
+.lang-arabic *,.lang-arabic *::before,.lang-arabic *::after{letter-spacing:0!important}
+.lang-arabic .cbw-hero__title,.lang-arabic .cbw-article__title,.lang-arabic .cbw-slide__title{line-height:1.4}
+.lang-arabic .cbw-card__title{line-height:1.55}
+.lang-arabic .cbw-prose{line-height:1.95}
+/* Stories without a translation stay in English. Each block takes its
+   direction from its own first letter, so English punctuation stays put on
+   a right-to-left page; long English passages in an article read left-aligned. */
+.lang-arabic{text-align:right}
+.lang-arabic :is(h1,h2,h3,h4,h5,h6,p,li,dt,dd,figcaption,blockquote,label){unicode-bidi:plaintext}
+.lang-arabic .cbw-prose :is(p,li,h2,h3,h4,blockquote){text-align:start}
 
 /* ------------------------------------------------------------------
    Dark-theme refinements. The navy furniture (nav, section bands, the
@@ -707,17 +768,17 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
    need an edge to stay legible as separate surfaces.
    ------------------------------------------------------------------ */
 [data-theme="dark"] .cbw-sectionhead{
-  border-top:1px solid rgba(216,190,139,.16);
-  border-bottom:1px solid rgba(216,190,139,.16);
+  border-top:1px solid rgba(227,200,117,.16);
+  border-bottom:1px solid rgba(227,200,117,.16);
 }
 [data-theme="dark"] .cbw-news{
-  border-top:1px solid rgba(216,190,139,.16);
-  border-bottom:1px solid rgba(216,190,139,.16);
+  border-top:1px solid rgba(227,200,117,.16);
+  border-bottom:1px solid rgba(227,200,117,.16);
 }
-[data-theme="dark"] .cbw-widget-cta{border:1px solid rgba(216,190,139,.2)}
-[data-theme="dark"] .cbw-nav{box-shadow:none;border-bottom:1px solid rgba(216,190,139,.12)}
+[data-theme="dark"] .cbw-widget-cta{border:1px solid rgba(227,200,117,.2)}
+[data-theme="dark"] .cbw-nav{box-shadow:none;border-bottom:1px solid rgba(227,200,117,.12)}
 [data-theme="dark"] .cbw-header{border-bottom-color:var(--line)}
-[data-theme="dark"] .cbw-footer{border-top:1px solid rgba(216,190,139,.12)}
+[data-theme="dark"] .cbw-footer{border-top:1px solid rgba(227,200,117,.12)}
 /* Photographs carry a lot of light; take the edge off on a dark page. */
 [data-theme="dark"] .cbw-card__media img,
 [data-theme="dark"] .cbw-hero__media img,
@@ -746,7 +807,7 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 }
 .cbw-notice--ok{background:#eef4ec;border-color:#c6dcc9;color:#20452c}
 .cbw-notice--err{background:#faeceb;border-color:#e8c4c2;color:#7a2029}
-.cbw-news .cbw-notice--ok{background:rgba(255,255,255,.12);border-color:rgba(216,190,139,.55);color:#fff}
+.cbw-news .cbw-notice--ok{background:rgba(255,255,255,.12);border-color:rgba(227,200,117,.55);color:#fff}
 .cbw-news .cbw-notice--err{background:rgba(156,47,59,.26);border-color:rgba(255,255,255,.3);color:#fff}
 .cbw-news__col{display:flex;flex-direction:column}
 
@@ -776,7 +837,7 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 .nav-links .page-numbers{
   display:grid;place-items:center;min-width:42px;height:42px;padding:0 12px;
   border:1px solid var(--line);border-radius:var(--radius-sm);
-  font-family:var(--font-head);font-size:.86rem;font-weight:600;color:var(--body);transition:.16s;
+  font-family:var(--font-head);font-size:.86rem;font-weight:600;color:var(--body);transition:var(--transition);
 }
 .nav-links .page-numbers:hover{border-color:var(--ink);color:var(--ink)}
 .nav-links .page-numbers.current{background:var(--ink);border-color:var(--ink);color:var(--bg)}
@@ -802,7 +863,7 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 .cbw-brand__link--footer .cbw-brand__mark{background:rgba(255,255,255,.1)}
 .cbw-footer__blurb{color:rgba(255,255,255,.6);font-size:.87rem;line-height:1.65}
 .cbw-footer__cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px}
-.cbw-footer__col .widget-title{color:#fff;font-size:.74rem;border-bottom-color:rgba(192,162,101,.6);padding-bottom:10px;margin-bottom:12px}
+.cbw-footer__col .widget-title{color:#fff;font-size:.74rem;border-bottom-color:rgba(201,164,76,.6);padding-bottom:10px;margin-bottom:12px}
 .cbw-footer__col .widget-title a{color:#fff}
 .cbw-footer__col ul{list-style:none;margin:0;padding:0}
 .cbw-footer__col li{padding:5px 0;border:0}
@@ -894,8 +955,8 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 .cbw-slide::after{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:
-    linear-gradient(0deg,rgba(5,11,28,.97) 0%,rgba(5,11,28,.82) 26%,rgba(5,11,28,.3) 58%,rgba(5,11,28,.4) 100%),
-    linear-gradient(90deg,rgba(5,11,28,.72) 0%,rgba(5,11,28,0) 68%);
+    linear-gradient(0deg,rgba(7,17,29,.97) 0%,rgba(7,17,29,.82) 26%,rgba(7,17,29,.3) 58%,rgba(7,17,29,.4) 100%),
+    linear-gradient(90deg,rgba(7,17,29,.72) 0%,rgba(7,17,29,0) 68%);
 }
 .cbw-slide__content{position:relative;z-index:2;padding-bottom:150px}
 .cbw-slide__content>*{max-width:800px}
@@ -927,7 +988,7 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 .cbw-slide .cbw-meta>*+*::before{color:rgba(255,255,255,.4)}
 .cbw-credit--slide{
   position:absolute;top:16px;right:16px;z-index:3;max-width:min(60%,420px);margin:0;padding:4px 10px;border-radius:100px;
-  font-size:.68rem;color:rgba(255,255,255,.82);background:rgba(5,11,28,.5);
+  font-size:.68rem;color:rgba(255,255,255,.82);background:rgba(7,17,29,.5);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .cbw-credit--slide a{color:inherit}
@@ -1007,7 +1068,7 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 }
 .cbw-carousel--issues .cbw-issue:hover .cbw-issue__cover{
   transform:perspective(900px) rotateY(-9deg) translateY(-6px);
-  box-shadow:18px 24px 42px -18px rgba(5,11,28,.6);
+  box-shadow:18px 24px 42px -18px rgba(7,17,29,.6);
 }
 .cbw-carousel--issues .cbw-issue:hover .cbw-issue__cover::after{opacity:1}
 
@@ -1025,11 +1086,11 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 .cbw-explore__card:hover .cbw-explore__media img{transform:scale(1.1)}
 .cbw-explore__card::before{
   content:"";position:absolute;inset:0;z-index:-1;
-  background:linear-gradient(180deg,rgba(10,19,48,.3) 0%,rgba(10,19,48,.62) 45%,rgba(5,11,28,.95) 100%);
+  background:linear-gradient(180deg,rgba(11,23,38,.3) 0%,rgba(11,23,38,.62) 45%,rgba(7,17,29,.95) 100%);
 }
 .cbw-explore__card::after{
   content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;opacity:0;transition:opacity .4s;
-  background:linear-gradient(160deg,rgba(192,162,101,.4),rgba(192,162,101,0) 55%);
+  background:linear-gradient(160deg,rgba(201,164,76,.4),rgba(201,164,76,0) 55%);
 }
 .cbw-explore__card:hover::after{opacity:1}
 .cbw-explore__icon{
@@ -1054,8 +1115,8 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 .cbw-stats{
   position:relative;overflow:hidden;padding:60px 0;color:#fff;
   background:
-    radial-gradient(ellipse 60% 90% at 12% 0%,rgba(192,162,101,.24),transparent 60%),
-    radial-gradient(ellipse 50% 80% at 95% 100%,rgba(84,110,190,.28),transparent 60%),
+    radial-gradient(ellipse 60% 90% at 12% 0%,rgba(201,164,76,.24),transparent 60%),
+    radial-gradient(ellipse 50% 80% at 95% 100%,rgba(156,118,42,.28),transparent 60%),
     linear-gradient(135deg,var(--navy-800),var(--navy-950));
 }
 .cbw-stats__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
@@ -1063,10 +1124,10 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
   display:flex;flex-direction:column;align-items:center;gap:6px;padding:28px 16px 24px;text-align:center;
   border-radius:18px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);
 }
-.cbw-stat:hover{translate:0 -5px;background-color:rgba(255,255,255,.08);border-color:rgba(216,190,139,.45)}
+.cbw-stat:hover{translate:0 -5px;background-color:rgba(255,255,255,.08);border-color:rgba(227,200,117,.45)}
 .cbw-stat__icon{
   display:grid;place-items:center;width:56px;height:56px;margin-bottom:8px;border-radius:50%;
-  background:rgba(192,162,101,.16);color:var(--gold-400);box-shadow:0 0 0 6px rgba(192,162,101,.06);
+  background:rgba(201,164,76,.16);color:var(--gold-400);box-shadow:0 0 0 6px rgba(201,164,76,.06);
   animation:cbw-float 4.5s ease-in-out infinite;
 }
 .cbw-stat:nth-child(2) .cbw-stat__icon{animation-delay:-1.1s}
@@ -1079,19 +1140,19 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 .cbw-news{position:relative;overflow:hidden}
 .cbw-news::before{
   content:"";position:absolute;width:520px;height:520px;right:-140px;top:-220px;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,rgba(192,162,101,.26),transparent 65%);animation:cbw-drift 14s ease-in-out infinite alternate;
+  background:radial-gradient(circle,rgba(201,164,76,.26),transparent 65%);animation:cbw-drift 14s ease-in-out infinite alternate;
 }
 .cbw-news__inner{position:relative}
 .cbw-news__icon{
   display:grid;place-items:center;width:54px;height:54px;margin-bottom:16px;border-radius:15px;
-  background:rgba(192,162,101,.18);border:1px solid rgba(216,190,139,.35);color:var(--gold-400);
+  background:rgba(201,164,76,.18);border:1px solid rgba(227,200,117,.35);color:var(--gold-400);
   animation:cbw-float 4s ease-in-out infinite;
 }
 
 /* Back to top, with a ring that fills as the page is read */
 .cbw-totop{
   position:fixed;right:22px;bottom:22px;z-index:150;display:grid;place-items:center;width:52px;height:52px;border-radius:50%;
-  background:var(--navy-800);color:var(--gold-400);box-shadow:0 12px 28px -10px rgba(5,11,28,.6);
+  background:var(--navy-800);color:var(--gold-400);box-shadow:0 12px 28px -10px rgba(7,17,29,.6);
   opacity:0;visibility:hidden;transform:translateY(18px) scale(.9);
   transition:opacity .3s,transform .3s,visibility .3s,background-color .2s,color .2s;
 }
@@ -1104,9 +1165,9 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
   stroke-dasharray:100;stroke-dashoffset:calc(100 - var(--cbw-progress,0));
 }
 .cbw-totop:hover .cbw-totop__ring circle{stroke:var(--navy-900)}
-[data-theme="dark"] .cbw-totop{border:1px solid rgba(216,190,139,.3)}
-[data-theme="dark"] .cbw-section__icon{background:var(--bg-tint);border:1px solid rgba(216,190,139,.25)}
-[data-theme="dark"] .cbw-ticker{border-bottom-color:rgba(216,190,139,.14)}
+[data-theme="dark"] .cbw-totop{border:1px solid rgba(227,200,117,.3)}
+[data-theme="dark"] .cbw-section__icon{background:var(--bg-tint);border:1px solid rgba(227,200,117,.25)}
+[data-theme="dark"] .cbw-ticker{border-bottom-color:rgba(227,200,117,.14)}
 
 /* ============================================================
    Entrance reveals. Hidden only under .js, so no script = no hiding.
@@ -1183,7 +1244,7 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 
   .cbw-nav__backdrop:not([hidden]){
     display:block;position:fixed;inset:0;z-index:1;
-    background:rgba(5,11,28,.6);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+    background:rgba(7,17,29,.6);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
     opacity:0;transition:opacity .3s ease;
   }
   .cbw-nav__backdrop.is-visible{opacity:1}
@@ -1272,14 +1333,14 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 }
 
 @media (max-width:760px){
-  .custom-logo{height:84px}
+  .custom-logo{height:62px}
   .cbw-layout__side{flex-direction:column;flex-wrap:nowrap;gap:22px}
   .cbw-layout__side>*{flex:0 0 auto;width:100%;min-width:0}
   .cbw-grid--2,.cbw-grid--3,.cbw-grid--4{grid-template-columns:repeat(2,minmax(0,1fr))}
 
   /* The masthead keeps only the logo; search and the calls to action move into
      the nav drawer so the first screen is mostly content. */
-  .cbw-header__inner{gap:12px;padding-top:14px;padding-bottom:14px}
+  .cbw-header__inner{gap:12px;padding-top:8px;padding-bottom:8px}
   .cbw-header__actions{display:none}
 
   .cbw-topbar__inner{justify-content:space-between;gap:10px;min-height:36px}
@@ -1317,7 +1378,7 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 }
 
 @media (max-width:520px){
-  .custom-logo{height:74px}
+  .custom-logo{height:56px}
   .cbw-wrap{padding:0 18px}
   .cbw-search__submit{display:none}
   .cbw-search__field,.cbw-search__field:focus{padding-right:14px}
@@ -1367,7 +1428,7 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
     display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
   }
   .cbw-slide::after{
-    background:linear-gradient(0deg,rgba(5,11,28,.98) 0%,rgba(5,11,28,.86) 38%,rgba(5,11,28,.3) 70%,rgba(5,11,28,.45) 100%);
+    background:linear-gradient(0deg,rgba(7,17,29,.98) 0%,rgba(7,17,29,.86) 38%,rgba(7,17,29,.3) 70%,rgba(7,17,29,.45) 100%);
   }
   .cbw-credit--slide{top:12px;right:12px;max-width:calc(100% - 24px)}
   .cbw-carousel__track{grid-auto-columns:calc((100% - var(--gap)) / 2.15)}
@@ -1445,3 +1506,15 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
   .cbw-layout{grid-template-columns:1fr}
   body{font-size:12pt}
 }
+
+/* Right-to-left pages load main-rtl.css, built from this file by rtlcss:
+     npx rtlcss assets/css/main.css assets/css/main-rtl.css
+   The block below is written into that file only. Arrows and chevrons point
+   the way the page reads; the magazine shelf and book keep their
+   left-to-right mechanics, so their icons stay as drawn. */
+/*rtl:raw:
+.cbw-icon--chevron-left,.cbw-icon--chevron-right,.cbw-icon--arrow-right{transform:scaleX(-1)}
+.cbw-btn:hover .cbw-icon--arrow-right,.cbw-viewall:hover .cbw-icon--arrow-right,
+.cbw-viewall:hover .cbw-icon--chevron-right{transform:translateX(-4px) scaleX(-1)}
+.cbw-shelf .cbw-icon,.cbw-book .cbw-icon{transform:none}
+*/

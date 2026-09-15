@@ -106,3 +106,20 @@ If you are using the image under the cr | CC BY-SA 2.5 | [Commons](https://commo
 | WAG9 locomotive brings in North bound Freight at Godavari railway station | Adityamadhav83 | CC BY 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:WAG9_locomotive_brings_in_North_bound_Freight_at_Godavari_railway_station.jpg) |
 | WDG4D Freight Locomotive | Apurba Biswas | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:WDG4D_Freight_Locomotive.jpg) |
 | WDM-3A locomotive of Indian Railways | Ravi Dwivedi | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:WDM-3A_locomotive_of_Indian_Railways.jpg) |
+
+## Magazine covers
+
+The eight issue covers are drawn by `brand/covers.php` over these photographs
+(same licences as the originals; credit is also stored on each cover in the
+media library).
+
+| Issue | Photograph | Photographer | Licence | Source |
+|---|---|---|---|---|
+| The Reinvention Issue | Connaught Place, New Delhi at night | Slyronit | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Connaught_Place,_New_Delhi_at_night.jpg) |
+| The Founders Issue | BHIVE Workspace &#8211; HSR Bangalore | Coworker2016 | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:BHIVE_Workspace_-_HSR_Bangalore.jpg) |
+| The Capital Issue | Hitec City buildings (30087) | Syced | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:Hitec_City_buildings_(30087).jpg) |
+| The Operators Issue | WDG4D Freight Locomotive | Apurba Biswas | CC0 | [Commons](https://commons.wikimedia.org/wiki/File:WDG4D_Freight_Locomotive.jpg) |
+| The Scale Issue | Skyline pic Mumbai | webhishek | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Skyline_pic_Mumbai.jpg) |
+| The Next Decade Issue | DLF Epitome Tower, DLF Phase 3, Gurugram | Sahil Dhiman | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:DLF_Epitome_Tower,_DLF_Phase_3,_Gurugram.jpg) |
+| The Leadership Issue | Bandra Worli sea link, Mumbai | Rahulransubhe | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Bandra_Worli_sea_link,_Mumbai.jpg) |
+| The Global Markets Issue | International Container Transshipment Terminal, Kochi | BgbwikiV4 | CC BY 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:International_Container_Transshipment_Terminal,_Kochi.jpg) |

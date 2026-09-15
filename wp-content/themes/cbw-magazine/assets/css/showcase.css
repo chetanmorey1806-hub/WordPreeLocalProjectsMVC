@@ -1,0 +1,386 @@
+/* ==================================================================
+   Magazine showcase — a 3D shelf of covers, and the book each opens into.
+   Loaded on the front page only; tokens come from main.css.
+   ================================================================== */
+
+.cbw-showcase{
+  position:relative;isolation:isolate;overflow:hidden;
+  background:var(--navy-950);color:#fff;
+  padding:clamp(56px,8vw,104px) 0 clamp(36px,5vw,64px);
+}
+.cbw-showcase__bg{position:absolute;inset:0;z-index:-2}
+.cbw-showcase__bg img{width:100%;height:100%;object-fit:cover;opacity:.46;filter:saturate(.85) contrast(1.05)}
+/* Darken toward the edges and the foot so the heading and the caption
+   always sit on navy, whatever the photograph does. */
+.cbw-showcase::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(70% 60% at 50% 38%, rgba(11,23,38,.15), rgba(7,17,29,.82) 72%),
+    linear-gradient(180deg, rgba(7,17,29,.72) 0%, rgba(7,17,29,.2) 34%, rgba(7,17,29,.55) 70%, var(--navy-950) 100%);
+}
+
+.cbw-showcase__head{text-align:center}
+.cbw-showcase__title{
+  margin:0;font-family:"Playfair Display","Noto Sans Devanagari","Noto Sans Arabic",Georgia,serif;
+  font-weight:500;font-size:clamp(2.1rem,5.4vw,4.5rem);line-height:1.08;letter-spacing:-.01em;color:#fff;
+  text-shadow:0 2px 24px rgba(0,0,0,.35);
+}
+.cbw-showcase__title em{font-style:italic;color:var(--gold-400)}
+.cbw-showcase__tag{
+  margin:20px 0 0;font-family:var(--font-head);font-size:.8rem;font-weight:600;
+  letter-spacing:.34em;text-transform:uppercase;color:var(--gold-400);
+}
+.cbw-showcase__sub{margin:12px auto 0;max-width:54ch;font-size:1.02rem;line-height:1.6;color:rgba(255,255,255,.8)}
+.lang-devanagari .cbw-showcase__tag{letter-spacing:.08em}
+
+/* ------------------------------------------------------------------
+   The shelf
+   ------------------------------------------------------------------ */
+.cbw-shelf{--cw:clamp(168px,21vw,292px);position:relative;margin-top:clamp(26px,4vw,52px)}
+.cbw-shelf__stage{
+  position:relative;height:calc(var(--cw) * 4 / 3 + 112px);
+  perspective:1500px;perspective-origin:50% 42%;
+  touch-action:pan-y;user-select:none;-webkit-user-select:none;
+}
+.cbw-shelf__item{
+  position:absolute;top:12px;left:50%;width:var(--cw);margin-left:calc(var(--cw) / -2);
+  aspect-ratio:3/4;display:block;border-radius:4px;color:inherit;text-decoration:none;
+  transform-style:preserve-3d;will-change:transform;
+  transition:transform .75s cubic-bezier(.22,.61,.36,1),opacity .5s ease,filter .5s ease;
+  filter:brightness(.58) saturate(.85);
+  /* A floor reflection, as on a polished shelf. Chromium and Safari only;
+     elsewhere the covers simply stand without it. */
+  -webkit-box-reflect:below 8px linear-gradient(transparent 64%,rgba(255,255,255,.14));
+  -webkit-tap-highlight-color:transparent;
+}
+.cbw-shelf__item.is-active{filter:none}
+.cbw-shelf__item:focus-visible{outline:3px solid var(--gold-400);outline-offset:6px}
+.cbw-shelf__item.is-lifted{visibility:hidden}
+.cbw-shelf__item,.cbw-shelf__item img{-webkit-user-drag:none}
+
+.cbw-shelf__cover{
+  position:relative;display:block;height:100%;border-radius:inherit;overflow:hidden;
+  box-shadow:0 30px 60px -12px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.06);
+  transition:transform .35s cubic-bezier(.22,.61,.36,1),box-shadow .35s ease;
+}
+.cbw-shelf__cover img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none}
+/* Gloss across the stock, and a shadow where the spine folds. */
+.cbw-shelf__cover::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,rgba(255,255,255,.22) 0%,rgba(255,255,255,0) 32%,rgba(255,255,255,0) 70%,rgba(255,255,255,.06) 100%);
+}
+.cbw-shelf__cover::before{
+  content:"";position:absolute;inset:0 auto 0 0;width:7%;z-index:1;pointer-events:none;
+  background:linear-gradient(90deg,rgba(0,0,0,.35),rgba(255,255,255,.08) 60%,transparent);
+}
+.cbw-shelf__item.is-active .cbw-shelf__cover{cursor:pointer}
+.cbw-shelf__item.is-active:hover .cbw-shelf__cover,
+.cbw-shelf__item.is-active:focus-visible .cbw-shelf__cover{
+  transform:translateY(-10px);
+  box-shadow:0 44px 70px -14px rgba(0,0,0,.75),0 0 0 1px rgba(227,200,117,.35);
+}
+
+.cbw-shelf__open{
+  position:absolute;left:50%;bottom:16px;z-index:2;
+  display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:99px;white-space:nowrap;
+  font-family:var(--font-head);font-size:.76rem;font-weight:600;color:var(--navy-900);
+  background:linear-gradient(135deg,var(--gold-400),var(--gold-500));box-shadow:0 8px 20px rgba(0,0,0,.35);
+  opacity:0;transform:translate(-50%,8px);transition:opacity .25s ease,transform .25s ease;
+}
+.cbw-shelf__item.is-active:hover .cbw-shelf__open,
+.cbw-shelf__item.is-active:focus-visible .cbw-shelf__open{opacity:1;transform:translate(-50%,0)}
+/* No hover on touch: show the prompt on the active cover outright, as a
+   round badge on the right just under the masthead rule, where the covers
+   carry only photograph (masthead above, cover lines to the left). */
+@media (hover:none){
+  .cbw-shelf__open{
+    left:auto;right:10px;top:24%;bottom:auto;width:38px;height:38px;padding:0;
+    justify-content:center;gap:0;font-size:0;transform:scale(.8);
+  }
+  .cbw-shelf__open svg{width:17px;height:17px}
+  .cbw-shelf__item.is-active .cbw-shelf__open{opacity:1;transform:none}
+}
+
+/* Entrance: stacked at the centre until the shelf scrolls into view, then
+   fanned out by the script. */
+.js .cbw-shelf:not(.is-ready) .cbw-shelf__item{opacity:0;transform:translate3d(0,40px,-260px) scale(.9)}
+
+.cbw-shelf__nav{
+  position:absolute;z-index:300;top:calc(12px + var(--cw) * 2 / 3);transform:translateY(-50%);
+  width:54px;height:54px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.42);background:rgba(7,17,29,.35);color:#fff;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);cursor:pointer;
+  transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;
+}
+.cbw-shelf__nav--prev{left:max(16px,calc(50% - var(--cw) * 2.25))}
+.cbw-shelf__nav--next{right:max(16px,calc(50% - var(--cw) * 2.25))}
+.cbw-shelf__nav:hover,.cbw-shelf__nav:focus-visible{background:var(--gold-500);border-color:var(--gold-500);color:var(--navy-900)}
+.cbw-shelf__nav:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.cbw-shelf__nav:active{transform:translateY(-50%) scale(.94)}
+
+.cbw-shelf__caption{margin:4px 0 0;padding:0 16px;text-align:center}
+.cbw-shelf__name{
+  display:block;font-family:"Playfair Display","Noto Sans Devanagari","Noto Sans Arabic",Georgia,serif;
+  font-weight:500;font-size:clamp(1.2rem,2vw,1.5rem);color:#fff;
+}
+.cbw-shelf__date{
+  display:block;margin-top:4px;font-family:var(--font-head);font-size:.72rem;font-weight:600;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--gold-400);
+}
+.cbw-shelf__hint{display:inline-flex;margin-top:10px;font-size:.82rem;color:rgba(255,255,255,.68)}
+
+@media (max-width:700px){
+  .cbw-shelf{--cw:min(52vw,210px)}
+  .cbw-shelf__nav{width:44px;height:44px}
+  .cbw-shelf__nav--prev{left:8px}
+  .cbw-shelf__nav--next{right:8px}
+}
+
+/* Without scripts: a plain scrolling row of covers that link to each issue. */
+html:not(.js) .cbw-shelf__stage{
+  display:flex;gap:18px;height:auto;overflow-x:auto;perspective:none;
+  padding:12px 16px 24px;scroll-snap-type:x mandatory;
+}
+html:not(.js) .cbw-shelf__item{
+  position:relative;left:auto;top:auto;margin:0;flex:0 0 var(--cw);
+  filter:none;-webkit-box-reflect:none;scroll-snap-align:center;
+}
+html:not(.js) .cbw-shelf__nav,
+html:not(.js) .cbw-shelf__hint{display:none}
+
+/* ------------------------------------------------------------------
+   The reader
+   ------------------------------------------------------------------ */
+html.cbw-book-lock{overflow:hidden}
+
+.cbw-book{
+  position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;
+  margin:0;padding:0;border:0;background:transparent;color:#fff;overflow:hidden;
+}
+.cbw-book::backdrop{background:transparent}
+.cbw-book__backdrop{
+  position:absolute;inset:0;
+  background:radial-gradient(70% 60% at 50% 45%,rgba(16,31,51,.72),rgba(4,9,16,.94));
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  opacity:0;transition:opacity .45s ease;
+}
+.cbw-book.is-open .cbw-book__backdrop{opacity:1}
+
+.cbw-book__top,
+.cbw-book__bar{
+  position:absolute;left:0;right:0;display:flex;align-items:center;gap:16px;
+  padding:16px clamp(16px,3vw,32px);opacity:0;
+  transition:opacity .35s ease .22s,transform .35s ease .22s;
+}
+.cbw-book__top{top:0;justify-content:space-between;transform:translateY(-8px)}
+.cbw-book__bar{bottom:0;justify-content:center;gap:20px;transform:translateY(8px)}
+.cbw-book.is-open .cbw-book__top,
+.cbw-book.is-open .cbw-book__bar{opacity:1;transform:none}
+
+.cbw-book__title{
+  margin:0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-family:"Playfair Display","Noto Sans Devanagari","Noto Sans Arabic",Georgia,serif;font-size:1.15rem;color:#fff;
+}
+.cbw-book__title span{
+  margin-left:12px;font-family:var(--font-head);font-size:.72rem;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--gold-400);
+}
+.cbw-book__btn{
+  flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;
+  transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;
+}
+.cbw-book__btn:hover,.cbw-book__btn:focus-visible{background:var(--gold-500);border-color:var(--gold-500);color:var(--navy-900)}
+.cbw-book__btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.cbw-book__btn:active{transform:scale(.94)}
+.cbw-book__btn:disabled{opacity:.32;cursor:default;background:transparent;border-color:rgba(255,255,255,.32);color:#fff;transform:none}
+.cbw-book__count{
+  min-width:15ch;text-align:center;font-family:var(--font-head);font-size:.78rem;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--gold-400);
+}
+
+/* The book sits between the two bars. The viewport ignores the pointer so a
+   click beside the book reaches the backdrop and closes the reader. */
+.cbw-book__viewport{position:absolute;top:78px;bottom:86px;left:0;right:0;display:grid;place-items:center;pointer-events:none}
+.cbw-book__fly{pointer-events:auto;transition:transform .62s cubic-bezier(.22,.61,.36,1),opacity .3s ease}
+.cbw-book.is-closing .cbw-book__fly{opacity:0;transform:scale(.94)}
+.cbw-book.is-closing .cbw-book__top,
+.cbw-book.is-closing .cbw-book__bar,
+.cbw-book.is-closing .cbw-book__backdrop{opacity:0;transition-delay:0s;transition-duration:.3s}
+
+.cbw-book__stage{
+  position:relative;width:calc(var(--pw) * 2);height:var(--ph);
+  touch-action:none;filter:drop-shadow(0 30px 40px rgba(0,0,0,.5));
+}
+/* One page at a time: a turned leaf swings left past the spine, where it is
+   clipped away, so the next page is revealed beneath it. */
+.cbw-book.is-single .cbw-book__stage{width:var(--pw);clip-path:inset(-120px -120px -120px 0)}
+
+.cbw-book__book{
+  position:relative;width:100%;height:100%;cursor:pointer;
+  transform-style:preserve-3d;perspective:2400px;
+  transition:transform .9s cubic-bezier(.645,.045,.355,1);
+}
+.cbw-book__leaf{
+  position:absolute;top:0;left:50%;width:50%;height:100%;
+  transform-origin:left center;transform-style:preserve-3d;
+  transition:transform .9s cubic-bezier(.645,.045,.355,1);
+}
+.cbw-book.is-single .cbw-book__leaf{left:0;width:100%}
+.cbw-book__leaf.is-flipped{transform:rotateY(-180deg)}
+
+.cbw-book__face{
+  position:absolute;inset:0;overflow:hidden;
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;
+  background:#f7f4ec;color:#3a4350;container-type:inline-size;
+}
+.cbw-book__face--front{border-radius:0 3px 3px 0}
+.cbw-book__face--back{transform:rotateY(180deg);border-radius:3px 0 0 3px}
+/* The block of paper under the open pages, a few sheets thick at the edge. */
+.cbw-book__leaf:not(.is-flipped) .cbw-book__face--front{box-shadow:1px 0 0 #ebe6da,2px 0 0 #d9d4c8,3px 0 0 #ebe6da,4px 0 0 #d2ccbf}
+.cbw-book__leaf.is-flipped .cbw-book__face--back{box-shadow:-1px 0 0 #ebe6da,-2px 0 0 #d9d4c8,-3px 0 0 #ebe6da,-4px 0 0 #d2ccbf}
+/* The gutter, darker toward the spine. */
+.cbw-book__face::after{content:"";position:absolute;top:0;bottom:0;width:14%;z-index:5;pointer-events:none}
+.cbw-book__face--front::after{left:0;background:linear-gradient(90deg,rgba(20,14,4,.22),rgba(20,14,4,.06) 45%,transparent)}
+.cbw-book__face--back::after{right:0;background:linear-gradient(270deg,rgba(20,14,4,.22),rgba(20,14,4,.06) 45%,transparent)}
+.cbw-book.is-single .cbw-book__face--front::after{width:5%}
+/* Light slides across a page as it turns. */
+.cbw-book__leaf.is-turning .cbw-book__face::before{
+  content:"";position:absolute;inset:0;z-index:6;pointer-events:none;
+  background:linear-gradient(90deg,rgba(0,0,0,.26),transparent 60%);
+  animation:cbw-sheen .9s ease both;
+}
+@keyframes cbw-sheen{0%,100%{opacity:0}50%{opacity:1}}
+
+/* Resizes, Home/End and the first frame of opening: no animation. */
+.cbw-book.is-snapping,
+.cbw-book.is-snapping *{transition:none!important}
+
+/* ------------------------------------------------------------------
+   The printed page. Sizes are in container units, so a page looks the
+   same at any size, the way a real page scales on a copier.
+   ------------------------------------------------------------------ */
+.fbp{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  padding:7.5cqw 8cqw 10cqw;text-align:left;
+  font-family:var(--font-body);font-size:3.2cqw;line-height:1.58;color:#3a4350;
+}
+.fbp--cover{padding:0}
+.fbp--cover img{display:block;width:100%;height:100%;object-fit:cover}
+
+.fbp__run{
+  flex:none;display:flex;justify-content:space-between;gap:4cqw;
+  margin-bottom:5cqw;padding-bottom:2.4cqw;border-bottom:.28cqw solid #c9a44c;
+  font-family:var(--font-head);font-size:2.05cqw;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;color:#7a5b1e;
+}
+.fbp__kicker{
+  flex:none;margin-bottom:1.8cqw;font-family:var(--font-head);font-size:2.35cqw;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#9c2f3b;
+}
+.fbp__title{
+  flex:none;margin:0 0 2.8cqw;font-family:"Playfair Display","Noto Sans Devanagari","Noto Sans Arabic",Georgia,serif;
+  font-weight:600;font-size:6.4cqw;line-height:1.14;letter-spacing:-.005em;color:#18202a;
+}
+.fbp__stand{flex:none;margin:0 0 3cqw;font-size:3.45cqw;line-height:1.5;font-style:italic;color:#4a5360}
+.fbp__img{flex:none;margin:0 0 4.2cqw;aspect-ratio:16/10;overflow:hidden;border-radius:.8cqw;background:#e6dfd0}
+.fbp__img img{display:block;width:100%;height:100%;object-fit:cover}
+/* Body copy takes what is left and fades out rather than being cut mid-line. */
+.fbp__text{
+  flex:1;min-height:0;overflow:hidden;
+  -webkit-mask-image:linear-gradient(#000 62%,transparent);mask-image:linear-gradient(#000 62%,transparent);
+}
+.fbp__text p{margin:0 0 2.6cqw}
+.fbp__more{
+  flex:none;align-self:flex-start;margin-top:3cqw;padding-bottom:.4cqw;
+  font-family:var(--font-head);font-size:2.9cqw;font-weight:600;color:#0b1726;
+  text-decoration:none;border-bottom:.35cqw solid #c9a44c;
+}
+.fbp__more:hover,.fbp__more:focus-visible{color:#7a5b1e}
+.fbp__foot{
+  position:absolute;left:0;right:0;bottom:4cqw;text-align:center;
+  font-family:var(--font-head);font-size:2.2cqw;font-weight:600;color:#59616d;
+}
+
+/* Editor's letter */
+.fbp--editor .fbp__lede{font-size:3.6cqw;color:#222b36}
+.fbp--editor .fbp__lede::first-letter{
+  float:left;margin:1cqw 1.8cqw 0 0;font-family:"Playfair Display",Georgia,serif;
+  font-size:12.5cqw;line-height:.78;color:#7a5b1e;
+}
+.fbp__sign{
+  flex:none;margin:3cqw 0 0;font-family:"Playfair Display","Noto Sans Devanagari","Noto Sans Arabic",Georgia,serif;
+  font-style:italic;font-size:3.8cqw;color:#18202a;
+}
+.fbp__sign span{
+  display:block;margin-top:.8cqw;font-family:var(--font-head);font-style:normal;font-size:2.2cqw;
+  letter-spacing:.14em;text-transform:uppercase;color:#7a5b1e;
+}
+
+/* Contents */
+.fbp__toc{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;margin:0;padding:0;list-style:none}
+/* Six entries have to fit one page, so each headline is held to two lines. */
+.fbp__toc li{
+  flex:none;display:grid;grid-template-columns:9.5cqw 1fr;gap:3cqw;align-items:start;
+  padding:1.6cqw 0;border-bottom:.22cqw solid #e0dbcf;
+}
+.fbp__tocnum{font-family:"Playfair Display",Georgia,serif;font-size:5.6cqw;line-height:1;color:#7a5b1e}
+.fbp__toctext{
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;
+  font-family:var(--font-head);font-size:2.9cqw;font-weight:600;line-height:1.28;color:#18202a;
+}
+.fbp__toctext em{
+  display:block;margin-bottom:.6cqw;font-style:normal;font-size:2cqw;font-weight:700;line-height:1.3;
+  letter-spacing:.13em;text-transform:uppercase;color:#9c2f3b;
+}
+
+/* Back cover */
+.fbp--back{
+  align-items:center;justify-content:center;gap:3.5cqw;padding:10cqw;text-align:center;color:#e8ebef;
+  background:
+    radial-gradient(90% 70% at 50% 30%,rgba(201,164,76,.22),transparent 60%),
+    linear-gradient(160deg,#101f33,#07111d);
+}
+.fbp__logo{width:52%;height:auto;color:#fff;font-size:6cqw}
+.fbp__tag{
+  margin:0;font-family:var(--font-head);font-size:2.6cqw;font-weight:600;
+  letter-spacing:.26em;text-transform:uppercase;color:#e3c875;
+}
+.fbp__note{margin:0;font-size:3.2cqw;color:#cdd2d9}
+.fbp__more--light{align-self:center;color:#fff;border-bottom-color:#e3c875}
+.fbp__more--light:hover,.fbp__more--light:focus-visible{color:#e3c875}
+.fbp__url{
+  position:absolute;left:0;right:0;bottom:6cqw;font-family:var(--font-head);
+  font-size:2.2cqw;letter-spacing:.12em;color:#aab1ba;
+}
+
+/* Tracking suits Latin capitals; Devanagari needs its letters joined. */
+.lang-devanagari .fbp__run,
+.lang-devanagari .fbp__kicker,
+.lang-devanagari .fbp__tag,
+.lang-devanagari .fbp__toctext em,
+.lang-devanagari .fbp__sign span,
+.lang-devanagari .cbw-book__count,
+.lang-devanagari .cbw-shelf__date{letter-spacing:.03em}
+
+@media (max-width:820px){
+  .cbw-book__viewport{top:70px;bottom:78px}
+  .cbw-book__title{font-size:1rem}
+  .cbw-book__title span{display:none}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .cbw-shelf__item,.cbw-shelf__cover,.cbw-shelf__open{transition:none}
+  .js .cbw-shelf:not(.is-ready) .cbw-shelf__item{opacity:1;transform:none}
+  .cbw-book *,.cbw-book__backdrop{transition:none!important;animation:none!important}
+}
+
+/* Right-to-left pages (Arabic): the shelf and the book keep their
+   left-to-right mechanics, while the words on the pages run right to left. */
+[dir="rtl"] .cbw-shelf,[dir="rtl"] .cbw-book__viewport,[dir="rtl"] .cbw-book__bar{direction:ltr}
+[dir="rtl"] .fbp{direction:rtl;text-align:right}
+[dir="rtl"] .cbw-book__title span{margin-left:0;margin-right:12px}
+/* Arabic letters join, so a dropped first letter would break its word. */
+.lang-arabic .fbp--editor .fbp__lede::first-letter{float:none;margin:0;font:inherit;line-height:inherit;color:inherit}
+/* English headlines in an Arabic contents list keep their own direction. */
+.lang-arabic .fbp__toctext{unicode-bidi:plaintext}

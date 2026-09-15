@@ -160,9 +160,18 @@ function cbw_dashboard_stats() {
 	}
 
 	$pages = get_pages( array( 'post_status' => 'publish' ) );
+	// A page counts as translated once it has a title in every other language.
+	$others     = array_diff( array_keys( cbw_languages() ), array( 'en' ) );
 	$translated = 0;
 	foreach ( $pages as $p ) {
-		if ( get_post_meta( $p->ID, '_cbw_title_hi', true ) && get_post_meta( $p->ID, '_cbw_title_mr', true ) ) {
+		$missing = false;
+		foreach ( $others as $code ) {
+			if ( ! get_post_meta( $p->ID, cbw_meta_key( 'title', $code ), true ) ) {
+				$missing = true;
+				break;
+			}
+		}
+		if ( ! $missing ) {
 			$translated++;
 		}
 	}
@@ -433,10 +442,11 @@ function cbw_welcome_panel() {
 				<p class="cbw-hero__meterfoot">
 					<?php
 					printf(
-						/* translators: 1: translated pages, 2: total pages. */
-						esc_html__( '%1$d of %2$d pages in Hindi and Marathi', 'cbw' ),
+						/* translators: 1: translated pages, 2: total pages, 3: number of languages. */
+						esc_html__( '%1$d of %2$d pages in all %3$d languages', 'cbw' ),
 						(int) $s['translated'],
-						(int) $s['page_total']
+						(int) $s['page_total'],
+						count( cbw_languages() ) - 1
 					);
 					?>
 				</p>

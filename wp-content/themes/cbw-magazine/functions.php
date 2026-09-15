@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CBW_VERSION', '1.1.0' );
+define( 'CBW_VERSION', '1.5.0' );
 
 /**
  * Theme setup.
@@ -57,13 +57,16 @@ add_action( 'after_setup_theme', 'cbw_content_width', 0 );
  * Enqueue styles and scripts.
  */
 function cbw_assets() {
-	wp_enqueue_style(
-		'cbw-fonts',
-		'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap',
-		array(),
-		null
-	);
+	// Arabic pages add their script's face; the other languages share these.
+	$langs    = cbw_languages();
+	$families = 'family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700';
+	if ( 'arabic' === $langs[ cbw_lang() ]['script'] ) {
+		$families .= '&family=Noto+Sans+Arabic:wght@400;500;600;700';
+	}
+	wp_enqueue_style( 'cbw-fonts', 'https://fonts.googleapis.com/css2?' . $families . '&display=swap', array(), null );
 	wp_enqueue_style( 'cbw-main', get_template_directory_uri() . '/assets/css/main.css', array(), CBW_VERSION );
+	// Right-to-left languages get the mirrored copy, main-rtl.css.
+	wp_style_add_data( 'cbw-main', 'rtl', 'replace' );
 	wp_enqueue_script( 'cbw-main', get_template_directory_uri() . '/assets/js/main.js', array(), CBW_VERSION, true );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -141,3 +144,4 @@ require_once get_template_directory() . '/inc/forms.php';
 require_once get_template_directory() . '/inc/i18n.php';
 require_once get_template_directory() . '/inc/theme-mode.php';
 require_once get_template_directory() . '/inc/admin-style.php';
+require_once get_template_directory() . '/inc/issue-showcase.php';

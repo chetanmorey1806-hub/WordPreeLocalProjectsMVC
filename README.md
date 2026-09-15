@@ -89,7 +89,7 @@ inc/
   nav-walker.php           dropdown mega-menu walker
   post-types.php           Magazine Issue post type
   forms.php                contact + newsletter handling, Messages admin screen
-  i18n.php                 English / Hindi / Marathi switching
+  i18n.php                 7 languages (EN HI MR DE FR ES AR), Arabic RTL
   theme-mode.php           light / dark / auto, server-stamped to avoid a flash
   admin-style.php          the admin and sign-in page in the magazine's colours
 assets/css/main.css        design system (navy + gold), fully responsive
@@ -106,7 +106,7 @@ assets/js/main.js          nav panel, language dropdown, colour mode, slider,
 | **Editor's Picks** | Eight stories in a scroll-snap carousel — arrow buttons, mouse drag, native swipe on phones. |
 | **Explore sections** | All eight sections as photo cards with an icon, story count and sub-section count. Each card uses a different photo. |
 | **By the numbers** | Stories, issues, editors and languages, counted from the database; the numbers count up as they scroll in. |
-| **The Magazine** | Eight issue covers in a carousel, tilting slightly on hover. |
+| **Magazine showcase** | Under the hero: a 3D shelf of the eight issue covers over a night skyline — arrows, keys or swipe to browse. Click a cover and it opens as a flipbook (cover, editor's letter, contents, six stories, back cover) with real page turns. |
 
 **Navbar.** Each section has an icon. A gold bar grows under the hovered item,
 dropdown links arrive in sequence, and once the masthead scrolls away the bar
@@ -162,24 +162,35 @@ control back to the operating system.
 The stylesheet separates *literal* scales from *semantic* roles, which is what
 makes two themes possible without duplicating rules:
 
-- **Literal, shared by both themes** — `--navy-950/900/800`, `--gold-500/400`,
-  the type scale, the radii. The bars, buttons and gold rules are the same
-  midnight navy and champagne whichever theme is on.
+- **Literal, shared by both themes** — the brand palette: `--navy` `#0B1726`,
+  `--navy-dark` `#07111D`, `--navy-light` `#101F33`, `--card-navy` `#16263A`,
+  `--gold` `#C9A44C`, `--gold-light` `#E3C875`, `--gold-dark` `#9C762A`,
+  `--ivory` `#F7F4EC`, `--white`, `--black` `#18202A`, `--gray` `#7B8490`,
+  `--gray-light` `#AAB1BA`, `--border-light` `#D9D4C8`, `--border-dark`,
+  plus `--container` (1240px) and `--transition` (0.35s ease). The older
+  names `--navy-950/900/800`, `--gold-500/400` and `--wrap` point at these.
+  The bars, buttons and gold rules are the same midnight navy and champagne
+  whichever theme is on.
 - **Semantic, redefined per theme** — `--bg`, `--bg-soft`, `--bg-tint`,
   `--surface`, `--ink`, `--body`, `--muted`, `--link`, `--link-strong`,
   `--accent-text`, `--badge`, `--line`, `--line-soft`, `--rule`, the shadows.
 
 | Role | Light | Dark |
 |---|---|---|
-| Page ground `--bg` | `#fbf8f2` ivory | `#0a1330` midnight navy |
-| Alternating band `--bg-soft` | `#f4efe4` | `#0d1836` |
-| Card / field `--surface` | `#ffffff` | `#111d45` (lifts *above* the page) |
-| Headings `--ink` | `#141b2e` | `#f3efe4` |
-| Body `--body` | `#3b4358` | `#c8cede` |
-| Meta `--muted` | `#61687a` | `#98a1b6` |
-| Link `--link` | `#2b4079` | `#9fb6e6` |
-| Champagne as text `--accent-text` | `#806434` | `#d8be8b` |
+| Page ground `--bg` | `--ivory` `#F7F4EC` | `--navy` `#0B1726` |
+| Alternating band `--bg-soft` | `#EFEADF` | `#0E1B2C` |
+| Card / field `--surface` | `--white` | `--card-navy` `#16263A` (lifts *above* the page) |
+| Headings `--ink` | `--black` `#18202A` | `--ivory` `#F7F4EC` |
+| Body `--body` | `#3A4350` | `#CDD2D9` |
+| Meta `--muted` | `#59616D` — `--gray` deepened to 4.5:1 | `--gray-light` `#AAB1BA` |
+| Link `--link` | `#24416A` | `#A9BCD6` |
+| Champagne as text `--accent-text` | `#7A5B1E` — `--gold-dark` deepened to 4.5:1 | `--gold-light` `#E3C875` |
 | Category badge `--badge` | `#9c2f3b` | `#e59aa3` |
+| Borders `--line` | `--border-light` `#D9D4C8` | `--border-dark` `rgba(255,255,255,.10)` |
+
+`--gray` (3.4:1 on ivory) and `--gold-dark` (3.8:1) are used as given for
+icons, rules and large type; small text in the light theme uses the deepened
+shades above so it stays readable.
 
 Selected states (chips, pagination, tag hovers) use `background:var(--ink);
 color:var(--bg)` so they invert cleanly rather than hard-coding navy.
@@ -218,8 +229,9 @@ Two further "failures" turned out to be faults in the measuring script, not the
 site — it was not compositing alpha, and it was treating a decorative underline
 gradient as a background. Both were fixed in the checker.
 
-Magazine covers and editor avatars are generated in the same palette
-(`brand/brandart.php`), so the artwork never drifts from the CSS.
+Editor avatars are generated in the same palette (`brand/brandart.php`), so
+the artwork never drifts from the CSS. Magazine covers are drawn by
+`brand/covers.php` (see *Magazine covers* below).
 
 ## The admin and the sign-in page
 
@@ -321,7 +333,7 @@ every layer; the second by giving that control its own ground.
 | Section pages (46) | Featured photo behind the dark header band, dimmed for legibility |
 | About / Contact / Magazine pages | Hero photo above the copy |
 | Editorial Team | Generated initial avatars (see note below) |
-| Magazine covers | Generated brand artwork |
+| Magazine covers | A Commons photograph per issue under the GMS masthead, cover lines and title (`brand/covers.php`) |
 
 **Source and licence.** 96 photographs from **Wikimedia Commons**, all under
 licences that permit commercial use (CC0, CC BY, CC BY-SA, GODL-India, FAL).
@@ -350,8 +362,9 @@ instead. Replace them with real headshots once you have real staff.
 
 ## Languages
 
-A dropdown in the top bar (globe icon) offers **English / हिंदी / मराठी**, each
-with its native name and English name. The options are plain links, so arrow
+A dropdown in the top bar (globe icon) offers **English / हिंदी / मराठी /
+Deutsch / Français / Español / العربية**, each with its native name and English
+name. The options are plain links, so arrow
 keys, Escape and click-away all work, and it opens rightward when the top bar
 wraps and puts the button near the left edge of a phone. The choice arrives as
 `?lang=hi` and is remembered in a `cbw_lang` cookie for a year, so the visitor
@@ -359,12 +372,12 @@ stays in their language while browsing.
 
 | Layer | How it is translated |
 |---|---|
-| Interface (152 strings) | Theme text domain — `wp-content/languages/themes/cbw-hi_IN.l10n.php` and `cbw-mr_IN.l10n.php` |
-| Page titles, menu labels | `_cbw_title_hi` / `_cbw_title_mr` post meta |
-| Standfirsts and descriptions | `_cbw_excerpt_hi` / `_cbw_excerpt_mr` post meta |
-| Page and issue body copy | `_cbw_content_hi` / `_cbw_content_mr` post meta |
-| Category names | `_cbw_name_hi` / `_cbw_name_mr` term meta |
-| Site tagline | `cbw_tagline_hi` / `cbw_tagline_mr` options |
+| Interface (174 strings) | Theme text domain — one file per language in `wp-content/languages/themes/`: `cbw-hi_IN`, `cbw-mr_IN`, `cbw-de_DE`, `cbw-fr_FR`, `cbw-es_ES`, `cbw-ar` (`.l10n.php`) |
+| Page titles, menu labels | `_cbw_title_<code>` post meta — `<code>` is `hi`, `mr`, `de`, `fr`, `es` or `ar` |
+| Standfirsts and descriptions | `_cbw_excerpt_<code>` post meta |
+| Page and issue body copy | `_cbw_content_<code>` post meta |
+| Category names | `_cbw_name_<code>` term meta |
+| Site tagline | `cbw_tagline_<code>` options |
 
 Everything is stored as ordinary meta, so an editor can adjust any translation
 from wp-admin without touching code. The switching itself lives in
@@ -375,18 +388,40 @@ from wp-admin without touching code. The switching itself lives in
 and loosens line height — Devanagari needs more vertical room than Latin, and
 the display faces used for English headings have no Devanagari glyphs.
 
+**Arabic and right-to-left.** Arabic pages get `dir="rtl"` on `<html>` and load
+`assets/css/main-rtl.css`, a mirrored copy of `main.css` generated by rtlcss.
+Rebuild it whenever `main.css` changes:
+
+```bash
+npx rtlcss assets/css/main.css assets/css/main-rtl.css
+```
+
+`body.lang-arabic` swaps in Noto Sans Arabic (loaded only on Arabic pages) and
+removes all letter-spacing, which would pull apart the joins between Arabic
+letters. Arrows and chevrons are mirrored, and the carousels' arrow keys,
+swipe and buttons follow the reading direction. The magazine shelf and
+flipbook keep their left-to-right mechanics while the words on the pages run
+right to left. English articles shown on an Arabic page keep their own
+direction, so their punctuation stays in place.
+
+To add a language, add it to `cbw_languages()` in `inc/i18n.php` (with
+`'dir' => 'rtl'` if it reads right to left), then provide its `.l10n.php` file
+and the `_<code>` meta above.
+
 **What is not translated.** The 128 demo articles keep their English titles and
 bodies. Translating that volume of reported prose properly is a job for
 translators, not a build step. The mechanism is already wired up: fill in
-`_cbw_title_hi`, `_cbw_excerpt_hi` and `_cbw_content_hi` on any post and it will
-appear in Hindi. Everything else on the site — navigation, all 47 pages, all 8
-magazine issues, all category names and the entire interface — is fully
-trilingual.
+`_cbw_title_<code>`, `_cbw_excerpt_<code>` and `_cbw_content_<code>` on any post
+and it will appear in that language. Everything else on the site — navigation,
+all 47 pages, all 8 magazine issues, all category names and the entire
+interface — is translated into all seven languages. Dates keep English month
+names, because WordPress's own language packs are not installed.
 
 ## Responsive behaviour
 
 Verified at 320 / 375 / 414 / 768 / 1024 / 1440 px across six page types, and
-again in Hindi and Marathi (Devanagari runs wider than Latin) —
+again in Hindi and Marathi (Devanagari runs wider than Latin), and in Arabic
+(right-to-left) at 390 and 1440 px —
 `scrollWidth == clientWidth` everywhere, so no page scrolls sideways.
 
 **Mobile header (≤900px).** Tapping MENU slides a panel in from the left over
@@ -413,5 +448,23 @@ fictional — republishing that site's copy would be a copyright problem. Replac
 the demo articles with your own from the WordPress admin; the structure,
 templates and category wiring stay as they are.
 
-Cover artwork is generated programmatically (PHP GD), so no third-party images
-are bundled. Swap in photography by setting a featured image on any post.
+### Magazine covers
+
+Each issue's cover is a photograph from the media library (places, not
+faces: the stories are fictional, so no real person is put on a cover) with
+the GMS masthead, the issue's two lead stories as cover lines, and the issue
+title. The cover lines are the same stories the homepage flipbook opens to.
+Each cover carries its photo's credit, shown under the cover on the issue
+page and listed in `IMAGE-CREDITS.md`.
+
+To change a photo, edit the `$photos` list at the top of `brand/covers.php`
+(issue slug => media library photo title, horizontal focus), then from the
+WordPress root:
+
+```bash
+php brand/covers.php --preview=/tmp/covers   # draw only, to check
+php brand/covers.php                         # draw and replace the covers
+```
+
+It needs Python 3 with Pillow; the fonts (Playfair Display and Poppins, SIL
+Open Font Licence) are in `brand/fonts/`.
