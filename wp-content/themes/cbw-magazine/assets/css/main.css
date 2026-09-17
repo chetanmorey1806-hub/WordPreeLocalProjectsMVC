@@ -214,10 +214,14 @@ button{font:inherit}
    Header / brand
    ============================================================ */
 .cbw-header{background:var(--bg);border-bottom:1px solid var(--line-soft)}
-.cbw-header__inner{display:flex;align-items:center;gap:32px;padding-top:10px;padding-bottom:10px;flex-wrap:wrap}
+.cbw-header__inner{display:flex;align-items:center;gap:32px;padding-top:8px;padding-bottom:8px;flex-wrap:wrap}
 .cbw-brand__link{display:flex;align-items:center;gap:14px}
-.custom-logo-link{display:block;line-height:0}
-.custom-logo{width:auto;height:78px;max-width:100%}
+.custom-logo-link{display:block;line-height:0;transition:transform .35s cubic-bezier(.22,.61,.36,1)}
+.custom-logo-link:hover{transform:scale(1.04)}
+/* The logo artwork carries transparent margins (11% above, 21% below). Crop
+   them so the masthead holds only the mark: the box takes the visible
+   area's proportion and the image is positioned over it. */
+.custom-logo{width:auto;height:56px;max-width:100%;aspect-ratio:640/299;object-fit:cover;object-position:50% 34.6%}
 .cbw-brand__mark{
   display:grid;place-items:center;width:52px;height:52px;flex:0 0 auto;
   background:var(--navy-800);color:var(--gold-400);
@@ -1333,7 +1337,7 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 }
 
 @media (max-width:760px){
-  .custom-logo{height:62px}
+  .custom-logo{height:44px}
   .cbw-layout__side{flex-direction:column;flex-wrap:nowrap;gap:22px}
   .cbw-layout__side>*{flex:0 0 auto;width:100%;min-width:0}
   .cbw-grid--2,.cbw-grid--3,.cbw-grid--4{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -1378,8 +1382,9 @@ html:not(.js) .cbw-lang:focus-within .cbw-lang__menu{opacity:1;visibility:visibl
 }
 
 @media (max-width:520px){
-  .custom-logo{height:56px}
+  .custom-logo{height:42px}
   .cbw-wrap{padding:0 18px}
+  .cbw-header__inner{padding-top:6px;padding-bottom:6px}
   .cbw-search__submit{display:none}
   .cbw-search__field,.cbw-search__field:focus{padding-right:14px}
   .cbw-topbar__date{width:100%;text-align:center}

@@ -113,8 +113,10 @@ function cbw_dark_logo_style() {
 		[data-theme="dark"] .custom-logo-link{
 			background-image:url("<?php echo esc_url( $url ); ?>");
 			background-repeat:no-repeat;
-			background-position:left center;
-			background-size:contain;
+			/* Same crop as .custom-logo: fill the width, hide the artwork's
+			   transparent margins above and below. */
+			background-position:50% 34.6%;
+			background-size:100% auto;
 		}
 	</style>
 	<?php

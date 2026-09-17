@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CBW_VERSION', '1.5.0' );
+define( 'CBW_VERSION', '1.6.0' );
 
 /**
  * Theme setup.
